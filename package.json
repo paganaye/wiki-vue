@@ -1,0 +1,30 @@
+{
+  "name": "wiki",
+  "version": "1.0.0",
+  "description": "a wiki that uses vuejs",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paganaye/wiki.git"
+  },
+  "keywords": [
+    "wiki",
+    "vue",
+    "vuejs"
+  ],
+  "author": "Pascal Ganaye",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/paganaye/wiki/issues"
+  },
+  "homepage": "https://github.com/paganaye/wiki#readme",
+  "devDependencies": {
+    "fuse-box": "^2.3.3",
+    "typescript": "^2.5.3",
+    "vue": "^2.4.4",
+    "vuetify": "^0.16.5"
+  }
+}
