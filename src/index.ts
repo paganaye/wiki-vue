@@ -1,14 +1,17 @@
 import * as Vue from 'vue';
 
 Vue.component("cmpOne", {
-    template:'<p>hi</p>'
-
+    props: ["userName"],
+    template: '<p>hi {{userName}}</p>'
 });
+
 
 new Vue({
     el: "#app",
     template: `<div id='app'>
     <h1>it works</h1>
-    <cmpOne><cmpOne>
-</div>`
+    <p>data.x: {{x}}</p>
+    <cmpOne userName="Pascal"><cmpOne>
+</div>`,
+    data: { x: 123 }
 });
