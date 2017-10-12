@@ -57,7 +57,10 @@ Vue.component("array-vue", {
     <p>{{label}}</p>
     <div  id="list" ref="list">
         <div v-for="(item, index) in value" class="array-item">
-            <dyn-vue :label="'#' + index" :type='type && type.innerType || {}' :value='item' />
+            <div class="array-item-handle">{{index}}</div>
+            <div class="array-item-content">
+                <dyn-vue :label="'#' + index" :type='type && type.innerType || {}' :value='item' />
+            </div>
             <v-btn color="secondary">Delete</v-btn>
         </div>    
     </div>
@@ -70,7 +73,7 @@ Vue.component("array-vue", {
         var list = that.$refs.list;
         Sortable.create(list, {});
     },
-    
+
 
 });
 
