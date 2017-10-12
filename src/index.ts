@@ -3,14 +3,13 @@ import Vuetify from 'vuetify';
 
 Vue.use(Vuetify);
 
-
 Vue.component("cmpOne", {
-    props: ["userName"],
+    props: ["userName", "email"],
     data: () => {
         return {
             'emailRules': [
-                (v) => !!v || 'E-mail is required',
-                (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+                (v: any) => !!v || 'E-mail is required',
+                (v: any) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
             ]
         }
     },
@@ -22,13 +21,7 @@ Vue.component("cmpOne", {
             <span>Examples here</span>
         </v-badge>      
     </div>
-    <v-form v-model="valid">
-        <v-text-field
-            label="Name"
-            v-model="name"
-            :rules="nameRules"
-            :counter="10"
-            required></v-text-field>
+    <v-form>
         <v-text-field
             label="E-mail"
             v-model="email"
@@ -38,24 +31,80 @@ Vue.component("cmpOne", {
   </div>`
 });
 
+Vue.component("value-vue", {
+    props: ["label", "value", "type"],
+    template: `<div>
+    <!--p>type {{type}}, label:{{label}}, value:{{value}}</p-->
+    <v-text-field
+        :label="label || (type && (type.label || type.name)) || '???'"
+        v-model="value"></v-text-field>
+</div>`
+});
+
+Vue.component("object-vue", {
+    props: ["label", "value", "type"],
+    template: `<div>
+    <p>{{label}}</p>
+    <!--p>type {{type}}, label:{{label}}, value:{{value}}</p-->
+    <div v-for="prop in type.properties">
+        <dyn-vue :type='prop.type' :label='prop.label || prop.name' :value='value[prop.name]' />
+    </div>
+</div>`
+});
+
+Vue.component("array-vue", {
+    props: ["label", "value", "type"],
+    template: `<div>
+    <p>{{label}}</p>
+    <div v-for="(item, index) in value">
+        <dyn-vue :label="'#' + index" :type='type && type.innerType || {}' :value='item' />
+    </div>    
+</div>`
+});
+
+Vue.component("dyn-vue", {
+    props: ["label", "value", "type"],
+    template: `<div>
+    <array-vue  :label="label" :type="type" :value="value" v-if="Array.isArray(value)" />
+    <object-vue :label="label" :type="type" :value="value" v-else-if="typeof value === 'object' && !Array.isArray(value)" />
+    <value-vue  :label="label" :type="type" :value="value" v-else />
+</div>`
+});
+
 
 new Vue({
     el: "#app",
     template: `<div id='app'>
     <h1>it works</h1>
-    <p>data.x: {{x}}</p>    
+    <p>data.it1: {{it1}}</p>    
     
     <h3>it 1</h3>
-    <cmpOne />
+    <cmpOne email="ABC" />
     
     <h3>it 2</h3>
-    <p>data.x: {{x}}</p>
+    <value-vue :type='it2type' value="it2value" />
     
     <h3>it 3</h3>
-    <p>data.x: {{x}}</p>
+    <object-vue :type="it3type" :value="it3value" />
     
     <h3>it 4</h3>
-    <p>data.x: {{x}}</p>
+    <p>it4: {{it4}}</p>
 </div>`,
-    data: { x: 123 }
+    data: {
+        it1: "this is it1",
+        it2type: {
+            label: "hello"
+        },
+        it2value: "abc",
+        it3type: {
+            kind: "object",
+            properties: [
+                { name: "A", label: "first A" },
+                { name: "B", label: "then B" },
+                { name: "C" }
+            ]
+        },
+        it3value: { A: "hello", B: "world", C: ["1", "2", "3"] },
+        it4: "aa"
+    }
 });
