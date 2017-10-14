@@ -1,4 +1,4 @@
-.array-item {
+/* .array-item {
   margin-top:5px;
   margin-bottom: 5px;
   border:1px solid black;
@@ -6,5 +6,17 @@
 }
 
 .array-item-content {
-  
+  background-color: antiquewhite;
+  margin-left: 2em;
+} */
+.sortable-chosen {
+  background-color: #eee;
+}
+.sortable-ghost {
+  border: 1px solid red;
+  opacity: 0.2;
+}
+.sortable-drag {
+  border: 10px solid green;
+  opacity: 1 !important;
 }

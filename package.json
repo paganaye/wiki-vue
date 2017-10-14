@@ -26,5 +26,8 @@
     "typescript": "^2.5.3",
     "vue": "^2.4.4",
     "vuetify": "^0.16.5"
+  },
+  "dependencies": {
+    "firebase": "^4.5.1"
   }
 }
