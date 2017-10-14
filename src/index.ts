@@ -34,9 +34,11 @@ Vue.component("auth-vue", {
             v-model="password"></v-text-field>
         <v-btn @click="doLogin">Login</v-btn>
         <v-btn @click="doRegister">Register</v-btn>
+        <v-btn>forgotten password</v-btn>
     </div>
     <p>{{error}}</p>
 </div>`,
+
     data: () => auth,
     methods: {
         doLogout: () => {
@@ -84,9 +86,9 @@ var app = new Vue({
                 messagingSenderId: "708228282961"
             };
 
-
             if (firebase.apps.length) {
                 console.log("firebase is already initialized");
+                location.reload(true);
             } else {
                 firebase.initializeApp(config);
                 firebase.auth().onAuthStateChanged((user) => {
@@ -98,15 +100,6 @@ var app = new Vue({
                         console.log("User is now ", auth.userName);
                     }
                 })
-                var email: string = "test@ganaye.com";
-                var password: string = "testpassword";
-                firebase.auth().signInWithEmailAndPassword(email, password)
-                    .then((a) => {
-                        //console.log("logged in", a);
-                    })
-                    .catch((e) => {
-                        console.log("not logged in", e);
-                    });
             }
         } catch (e) {
             console.error(e);
