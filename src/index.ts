@@ -34,7 +34,7 @@ Vue.component("auth-vue", {
             v-model="password"></v-text-field>
         <v-btn @click="doLogin">Login</v-btn>
         <v-btn @click="doRegister">Register</v-btn>
-        <v-btn>forgotten password</v-btn>
+        <v-btn @click="doResetPassword">Reset password</v-btn>
     </div>
     <p>{{error}}</p>
 </div>`,
@@ -53,7 +53,17 @@ Vue.component("auth-vue", {
                 auth.error = e.message;
             });
         },
-        doRegister() {
+        doResetPassword: () => {
+            auth.error = "";
+            firebase.auth().sendPasswordResetEmail(
+                auth.login
+            ).then((m) => {
+                auth.error="Email sent. Check your email inbox or possibly the spam folder."
+            }).catch((e) => {
+                auth.error = e.message;
+            });
+        },
+        doRegister: () => {
             auth.error = "";
             firebase.auth().createUserWithEmailAndPassword(
                 auth.login,
