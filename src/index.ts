@@ -31,7 +31,6 @@ Vue.component("select-vue", {
         </v-btn>
     </v-card-actions>        
 </v-card>
-<auth-vue />
 </div>`,
 
     data: () => {
@@ -86,8 +85,10 @@ const app = new Vue({
     </v-list>
     </v-navigation-drawer>
         <v-toolbar app fixed clipped-left>
-        <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-        <v-toolbar-title>Application</v-toolbar-title>
+            <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+            <v-toolbar-title>Application</v-toolbar-title>
+            <v-spacer></v-spacer>
+          <auth-toolbar-vue />        
         </v-toolbar>
     <main>
         <v-content>
