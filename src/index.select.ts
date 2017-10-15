@@ -3,35 +3,37 @@ import Vuetify from 'vuetify';
 import Sortable = require('sortablejs');
 /*---*/
 import * as firebase from 'firebase';
-import * as Auth from "./auth";
-
-console.log("auth", Auth);
 
 Vue.use(Vuetify);
 
 
-
-const env = {
-    currentDocument: window.location.hash,
-    drawer: true,
-    it1: "this is it1",
-    source: "hi"
-};
-
-
 Vue.component("select-vue", {
-    props: ["label", "value", "type", "env", "currentDocument"],
+    props: ["label", "value", "type"],
     template: `<div>    
 <v-card>
-    <div class="headline pa-4">Headline</div>
-    <div class="pl-4 pr-4">Some text here with  wrapping {{currentDocument}}</div>
-    <v-card-actions>
-        <v-btn flat color="teal" value="recent" @click="b1">
-            <span>OK</span>
-        </v-btn>
-    </v-card-actions>        
+    <div class="headline text-xs-center pa-4">Headline</div>
+    <div class="pa-5">
+        <v-select v-model="select1"
+        label="Select a favorite activity or create a new one"
+        multiple tags :items="items" />
+    <v-select v-model="select2"
+        label="Select a favorite activity or create a new one"
+        :items="items" />
+    <v-text-field v-model="input1"
+        label="Select a favorite activity or create a new one"
+        :items="items" />
+    </div>
+    <v-card-acions>
+    <v-btn flat color="teal" value="recent" @click="b1">
+        <span>Recent</span>
+        <v-icon>history</v-icon>
+    </v-btn>
+    <v-btn primary flat @click="b2">
+        <span>Stop</span>
+        <v-icon>history</v-icon>
+    </v-btn>
+    </v-card-acions>
 </v-card>
-<auth-vue />
 </div>`,
 
     data: () => {
@@ -56,7 +58,7 @@ Vue.component("select-vue", {
 });
 
 
-const app = new Vue({
+var app = new Vue({
     el: "#app",
     template: `<div id='app'>
 <v-app>
@@ -67,7 +69,7 @@ const app = new Vue({
         enable-resize-watcher
         app>
     <v-list dense>
-        <v-list-tile>
+        <v-list-tile @click="javascript:alert(1)">
             <v-list-tile-action>
                 <v-icon>dashboard</v-icon>
             </v-list-tile-action>
@@ -75,7 +77,7 @@ const app = new Vue({
                 <v-list-tile-title>Dashboard</v-list-tile-title>
             </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile>
+        <v-list-tile @click="alert(3)">
             <v-list-tile-action>
                 <v-icon>settings</v-icon>
             </v-list-tile-action>
@@ -93,7 +95,8 @@ const app = new Vue({
         <v-content>
             <v-container fluid fill-height>
                 <v-layout justify-center align-center>
-                    <select-vue :currentDocument="currentDocument"></select-vue>                                                        
+                <select-vue></select-vue>                
+
                 </v-layout>
             </v-container>
         </v-content>
@@ -103,10 +106,9 @@ const app = new Vue({
     </v-footer>
 </v-app>
 </div>`,
-    data: () => env
+    data: {
+        drawer: true,
+        it1: "this is it1",
+        source: "hi"
+    }
 });
-
-
-window.addEventListener('popstate', () => {
-    env.currentDocument = window.location.hash;
-})

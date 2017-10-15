@@ -4,34 +4,6 @@ import Sortable = require('sortablejs');
 
 Vue.use(Vuetify);
 
-Vue.component("cmpOne", {
-    props: ["userName", "email"],
-    data: () => {
-        return {
-            'emailRules': [
-                (v: any) => !!v || 'E-mail is required',
-                (v: any) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
-            ]
-        }
-    },
-    template: `<div>
-    <h3>hi {{userName}}</h3>
-    <div class="text-xs-center">
-        <v-badge right>
-            <span slot="badge">1</span>
-            <span>Examples here</span>
-        </v-badge>      
-    </div>
-    <v-form>
-        <v-text-field
-            label="E-mail"
-            v-model="email"
-            :rules="emailRules"
-            required></v-text-field>
-    </v-form>
-  </div>`
-});
-
 Vue.component("value-vue", {
     props: ["label", "value", "type"],
     template: `<div>
