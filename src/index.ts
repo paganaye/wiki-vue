@@ -19,7 +19,7 @@ Vue.component("select-vue", {
                 multiple tags :items="items" />
             <v-select v-model="select2"
                 label="Select a favorite activity or create a new one"
-                multiple tags :items="items" />
+                :items="items" />
             <v-text-field v-model="input1"
                 label="Select a favorite activity or create a new one"
                 :items="items" />
