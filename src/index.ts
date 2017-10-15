@@ -10,13 +10,32 @@ Vue.use(Vuetify);
 Vue.component("select-vue", {
     props: ["label", "value", "type"],
     template: `<div>    
-    <v-select
-    v-model="select"
-    label="Select a favorite activity or create a new one"
-    multiple
-    tags
-    :items="items"></v-select>
-
+    
+    <v-card>
+        <div class="headline text-xs-center pa-4">Headline</div>
+            <div class="pa-5">
+                <v-select v-model="select1"
+                label="Select a favorite activity or create a new one"
+                multiple tags :items="items" />
+            <v-select v-model="select2"
+                label="Select a favorite activity or create a new one"
+                multiple tags :items="items" />
+            <v-text-field v-model="input1"
+                label="Select a favorite activity or create a new one"
+                :items="items" />
+        </div>
+        <v-card-acions>
+            <v-btn flat color="teal" value="recent">
+                <span>Recent</span>
+                <v-icon>history</v-icon>
+            </v-btn>
+            <v-btn primary flat>
+                <span>Stop</span>
+                <v-icon>history</v-icon>
+            </v-btn>
+        </v-card-acions>
+      
+    </v-card>
 </div>`,
 
     data: () => {
@@ -46,7 +65,7 @@ var app = new Vue({
         enable-resize-watcher
         app>
     <v-list dense>
-        <v-list-tile @click="">
+        <v-list-tile @click="javascript:alert(1)">
             <v-list-tile-action>
                 <v-icon>dashboard</v-icon>
             </v-list-tile-action>
@@ -54,7 +73,7 @@ var app = new Vue({
                 <v-list-tile-title>Dashboard</v-list-tile-title>
             </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile @click="">
+        <v-list-tile @click="alert(3)">
             <v-list-tile-action>
                 <v-icon>settings</v-icon>
             </v-list-tile-action>
@@ -72,8 +91,7 @@ var app = new Vue({
         <v-content>
             <v-container fluid fill-height>
                 <v-layout justify-center align-center>
-                <select-vue></select-vue>
-                
+                <select-vue></select-vue>                
 
                 </v-layout>
             </v-container>
