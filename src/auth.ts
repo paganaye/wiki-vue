@@ -2,15 +2,17 @@ import * as Vue from 'vue';
 import Vuetify from 'vuetify';
 
 import * as firebase from 'firebase';
-var auth = {
-    userName: "unknown",
+var userInstance: any = null;
+
+var authInstance = {
     loggedIn: false,
     login: "",
     password: "",
-    error: ""
+    userName: "unknown",
+    error: "",
+    loginDialog: false,
+    registerDialog: false
 };
-
-console.log("in auth");
 
 function initAuth() {
     try {
@@ -29,14 +31,16 @@ function initAuth() {
         } else {
             firebase.initializeApp(config);
             firebase.auth().onAuthStateChanged((user) => {
-                auth.loggedIn = (user != null)
-                if (user == null) {
-                    console.log("Logged out");
+                authInstance.loggedIn = (user != null)
+                if (authInstance.loggedIn) {
+                    authInstance.userName = user.displayName || user.email;
+                    console.log("User is now ", authInstance.userName);
+                    authInstance.loginDialog = false;
+                    authInstance.registerDialog = false;
                 } else {
-                    auth.userName = user.displayName || user.email;
-                    console.log("User is now ", auth.userName);
+                    console.log("Logged out");
                 }
-            })
+            });
         }
     } catch (e) {
         console.error(e);
@@ -48,77 +52,36 @@ function logout() {
 }
 
 function login() {
-    auth.error = "";
+    authInstance.error = "";
     firebase.auth().signInWithEmailAndPassword(
-        auth.login,
-        auth.password
+        authInstance.login,
+        authInstance.password
     ).catch((e) => {
-        auth.error = e.message;
+        authInstance.error = e.message;
     });
 }
 
 function resetPassword() {
-    auth.error = "";
+    authInstance.error = "";
     firebase.auth().sendPasswordResetEmail(
-        auth.login
+        authInstance.login
     ).then((m) => {
-        auth.error = "Email sent. Check your email inbox or possibly the spam folder."
+        authInstance.error = "Email sent. Check your email inbox or possibly the spam folder."
     }).catch((e) => {
-        auth.error = e.message;
+        authInstance.error = e.message;
     });
 }
 
 function register() {
-    auth.error = "";
+    authInstance.error = "";
     firebase.auth().createUserWithEmailAndPassword(
-        auth.login,
-        auth.password
+        authInstance.login,
+        authInstance.password
     ).catch((e) => {
-        auth.error = e.message;
+        authInstance.error = e.message;
     });
 }
 
-Vue.component("auth-vue", {
-    props: ["label", "value", "type"],
-    template: `<div>
-    <div v-if="loggedIn">    
-        <p>{{userName}}</p>
-        <v-btn @click="doLogout">Logout</v-btn>
-        </div>    
-    <div v-else>    
-        <v-text-field
-            label="user"
-            v-model="login"></v-text-field>
-        <v-text-field
-            label="password"
-            type="password"
-            v-model="password"></v-text-field>
-        <v-btn @click="doLogin">Login</v-btn>
-        <v-btn @click="doRegister">Register</v-btn>
-        <v-btn @click="doResetPassword">Reset password</v-btn>
-    </div>
-    <p>{{error}}</p>
-</div>`,
-
-    data: () => auth,
-    methods: {
-        doLogout: () => {
-            logout();
-        },
-        doLogin: () => {
-            login();
-        },
-        doResetPassword: () => {
-            resetPassword();
-        },
-        doRegister: () => {
-            register();
-        }
-    },
-    created() {
-        initAuth();
-    }
-});
 
 // https://material.io/icons/
 
@@ -126,54 +89,138 @@ Vue.component("auth-vue", {
 Vue.component("auth-toolbar-vue", {
     props: ["label", "value", "type"],
     template: `
-
 <v-menu bottom left>
     <v-btn icon slot="activator">
         <v-icon>account_circle</v-icon>        
     </v-btn>
     <v-list>
-        <v-list-tile key="title1" @click="">
-            <v-list-tile-title>Some text here</v-list-tile-title>
+        <v-list-tile key="title1" @click="auth.loginDialog = true" v-if="!auth.loggedIn">
+            <v-list-tile-title>Login</v-list-tile-title>
         </v-list-tile>
-        <v-list-tile key="title2" @click="">
-            <v-list-tile-title>Some text here</v-list-tile-title>
+        <v-list-tile key="title2" @click="auth.registerDialog = true" v-if="!auth.loggedIn">
+            <v-list-tile-title>Register</v-list-tile-title>
         </v-list-tile>
-    </v-list>
-</v-menu>
- 
-<!--    <div v-if="loggedIn">    
-        <p>{{userName}}</p>
-        <v-btn @click="doLogout">Logout</v-btn>
-        </div>    
-    <div v-else>    
-        <v-text-field
-            label="user"
-            v-model="login"></v-text-field>
-        <v-text-field
-            label="password"
-            type="password"
-            v-model="password"></v-text-field>
-        <v-btn @click="doLogin">Login</v-btn>
-        <v-btn @click="doRegister">Register</v-btn>
-        <v-btn @click="doResetPassword">Reset password</v-btn>
-    </div>
-    <p>{{error}}</p>
-    -->
-`,
-
-    data: () => auth,
+        <v-list-tile key="title3" @click="gotoAccount" v-if="auth.loggedIn">
+            <v-list-tile-title>Account</v-list-tile-title>
+        </v-list-tile>
+        <v-list-tile key="title3" @click="doLogout" v-if="auth.loggedIn">
+            <v-list-tile-title>Logout</v-list-tile-title>
+        </v-list-tile>
+    </v-list> 
+    <v-dialog v-model="auth.loginDialog" max-width="500px">
+        <v-card>
+            <v-card-title>
+                <span class="headline">Login</span>
+            </v-card-title>
+            <v-card-text>
+                <v-container grid-list-md>
+                    <v-layout wrap>
+                        <v-flex xs12>
+                            <v-text-field label="Email" v-model="auth.login"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12>
+                            <v-text-field label="Password" type="password" v-model="auth.password"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12>
+                            <p>{{auth.error}}</p>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn primary flat @click="doLogin">Login</v-btn>
+                <v-btn primary flat @click="auth.loginDialog = false">Cancel</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+    <v-dialog v-model="auth.registerDialog" max-width="500px">
+        <v-card>
+            <v-card-title>
+                <span class="headline">Register</span>
+            </v-card-title>
+            <v-card-text>
+                <v-container grid-list-md>
+                    <v-layout wrap>
+                        <v-flex xs12 sm6 md4>
+                            <v-text-field label="Legal first name" required></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                            <v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                            <v-text-field label="Legal last name" hint="example of helper text"
+                                persistent-hint
+                                required></v-text-field>
+                        </v-flex>
+                        <v-flex xs12>
+                            <v-text-field label="Email" required></v-text-field>
+                        </v-flex>
+                        <v-flex xs12>
+                            <v-text-field label="Password" type="password" required></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm6>
+                            <v-select
+                            label="Age"
+                            required
+                            :items="['0-17', '18-29', '30-54', '54+']"
+                            ></v-select>
+                        </v-flex>
+                        <v-flex xs12 sm6>
+                            <v-select
+                                label="Interests"
+                                multiple
+                                autocomplete
+                                chips
+                                :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
+                                ></v-select>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+                <small>*indicates required field</small>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn primary flat @click="registerDialog = false">Register</v-btn>
+                <v-btn primary flat @click="registerDialog = false">Cancel</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+    <v-dialog v-model="auth.resetPasswordDialog" max-width="500px">
+        <v-card>
+            <v-card-title>
+                <span class="headline">Reset password</span>
+            </v-card-title>
+            <v-card-text>
+                <v-container grid-list-md>
+                    <v-layout wrap>
+                        <v-flex xs12>
+                            <v-text-field label="Email" required></v-text-field>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn primary flat @click="resetPasswordDialog = false">Send password recovery email</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>    
+</v-menu>`,
+    data: () => {
+        return {
+            auth: authInstance
+        };
+    },
     methods: {
-        doLogout: () => {
-            logout();
-        },
         doLogin: () => {
             login();
         },
-        doResetPassword: () => {
-            resetPassword();
+        doLogout: () => {
+            logout();
         },
-        doRegister: () => {
-            register();
+        gotoAccount: () => {
+            location.hash = "account"
         }
     },
     created() {

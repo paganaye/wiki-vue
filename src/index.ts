@@ -10,7 +10,6 @@ console.log("auth", Auth);
 Vue.use(Vuetify);
 
 
-
 const env = {
     currentDocument: window.location.hash,
     drawer: true,
@@ -22,15 +21,6 @@ const env = {
 Vue.component("select-vue", {
     props: ["label", "value", "type", "env", "currentDocument"],
     template: `<div>    
-<v-card>
-    <div class="headline pa-4">Headline</div>
-    <div class="pl-4 pr-4">Some text here with  wrapping {{currentDocument}}</div>
-    <v-card-actions>
-        <v-btn flat color="teal" value="recent" @click="b1">
-            <span>OK</span>
-        </v-btn>
-    </v-card-actions>        
-</v-card>
 </div>`,
 
     data: () => {
