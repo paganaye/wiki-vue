@@ -1,49 +1,18 @@
 import * as Vue from 'vue';
 import Vuetify from 'vuetify';
-import Sortable = require('sortablejs');
-/*---*/
-import * as firebase from 'firebase';
 import * as Auth from "./auth";
-
-console.log("auth", Auth);
+import * as Wiki from "./wiki";
 
 Vue.use(Vuetify);
 
+// this console log avoids the tree shaking
+console.log(Auth, Wiki);
 
 const env = {
     currentDocument: window.location.hash,
-    drawer: true,
-    it1: "this is it1",
+    drawer: false,
     source: "hi"
 };
-
-
-Vue.component("select-vue", {
-    props: ["label", "value", "type", "env", "currentDocument"],
-    template: `<div>    
-</div>`,
-
-    data: () => {
-        return {
-            select: [],
-            items: [
-                'Programming',
-                'Design',
-                'Vue',
-                'Vuetify'
-            ]
-        }
-    },
-    methods: {
-        b1: () => {
-            alert("b1");
-        },
-        b2: () => {
-            alert("b2");
-        }
-    }
-});
-
 
 const app = new Vue({
     el: "#app",
@@ -84,7 +53,8 @@ const app = new Vue({
         <v-content>
             <v-container fluid fill-height>
                 <v-layout justify-center align-center>
-                    <select-vue :currentDocument="currentDocument"></select-vue>                                                        
+                    <wiki-vue :document="currentDocument">
+                    </wiki-vue>
                 </v-layout>
             </v-container>
         </v-content>
@@ -96,7 +66,6 @@ const app = new Vue({
 </div>`,
     data: () => env
 });
-
 
 window.addEventListener('popstate', () => {
     env.currentDocument = window.location.hash;

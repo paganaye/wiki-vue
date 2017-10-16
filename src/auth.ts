@@ -101,7 +101,7 @@ Vue.component("auth-toolbar-vue", {
             <v-list-tile-title>Register</v-list-tile-title>
         </v-list-tile>
         <v-list-tile key="title3" @click="gotoAccount" v-if="auth.loggedIn">
-            <v-list-tile-title>Account</v-list-tile-title>
+            <v-list-tile-title>{{auth.userName}}</v-list-tile-title>
         </v-list-tile>
         <v-list-tile key="title3" @click="doLogout" v-if="auth.loggedIn">
             <v-list-tile-title>Logout</v-list-tile-title>
