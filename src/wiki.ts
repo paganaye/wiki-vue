@@ -5,14 +5,16 @@ import * as firebase from 'firebase';
 
 Vue.component("wiki-vue", {
     props: ["document"],
-    template: `<div>Loading {{document}}</div>`,
+    template: `<div>
+    <p>Loading {{document}}</p>
+</div>`,
     data: () => {
-        return {
-        };
+        return {};
     },
     methods: {
     },
     created() {
+        
     }
 });
 
