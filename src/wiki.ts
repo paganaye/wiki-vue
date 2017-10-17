@@ -22,7 +22,8 @@ Vue.component("wiki-vue", {
         loadFromDb: function (this: any) {
             var that = this;
             var db = firebase.database();
-            var ref = db.ref().child(this.table).child(this.id);
+            var ref = db.ref().child(this.table || "home");
+            if (this.id) ref = ref.child(this.id);
             that.value = "loading...";
 
             console.log("db", db, "ref", ref);
