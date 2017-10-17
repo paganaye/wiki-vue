@@ -9,7 +9,7 @@ Vue.use(Vuetify);
 console.log(Auth, Wiki);
 
 const env = {
-    currentDocument: window.location.hash,
+    currentDocument: getCurrentDocument(),
     drawer: false,
     source: "hi"
 };
@@ -66,7 +66,11 @@ const app = new Vue({
 </div>`,
     data: () => env
 });
-
+function getCurrentDocument() {
+    var hash = window.location.hash;
+    if (hash.length > 0 && hash[0] === '#') hash = hash.substring(1);
+    return hash.trim();
+}
 window.addEventListener('popstate', () => {
-    env.currentDocument = window.location.hash;
+    env.currentDocument = getCurrentDocument();
 })
