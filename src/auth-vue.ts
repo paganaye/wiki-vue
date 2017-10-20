@@ -86,7 +86,7 @@ function register() {
 // https://material.io/icons/
 
 
-Vue.component("auth-toolbar-vue", {
+Vue.component("auth-vue", {
     props: ["label", "value", "type"],
     template: `
 <v-menu bottom left>

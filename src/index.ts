@@ -1,12 +1,12 @@
 import * as Vue from 'vue';
 import Vuetify from 'vuetify';
-import * as Auth from "./auth";
-import * as Wiki from "./wiki";
+import * as AuthVue from "./auth-vue";
+import * as WikiVue from "./wiki-vue";
 
 Vue.use(Vuetify);
 
 // this console log avoids the tree shaking
-console.log(Auth, Wiki);
+console.log(AuthVue, WikiVue);
 
 const env = {
     currentDocument: getCurrentDocument(),
@@ -47,7 +47,7 @@ const app = new Vue({
             <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
             <v-toolbar-title>Application</v-toolbar-title>
             <v-spacer></v-spacer>
-          <auth-toolbar-vue />        
+          <auth-vue />        
         </v-toolbar>
     <main>
         <v-content>

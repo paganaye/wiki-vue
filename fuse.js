@@ -17,6 +17,7 @@ fuse.bundle("app")
     .watch("**")
     .hmr()
     .instructions(`!> [index.ts]`);
-
+//    .instructions(`!> [index.value-object.ts]`);
+    
 fuse.dev({});
 fuse.run();

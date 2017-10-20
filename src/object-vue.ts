@@ -76,37 +76,3 @@ Vue.component("dyn-vue", {
         }
     }
 });
-
-new Vue({
-    el: "#app",
-    template: `<div id='app'>
-    <h3>it 3</h3>
-    <object-vue :type="it3type" :value="it3value" />
-
-    <h1>it works</h1>
-    <p>data.it1: {{it1}}</p>    
-    
-    <h3>it 2</h3>
-    <value-vue :type='it2type' value="it2value" />
-        
-    <h3>it 4</h3>
-    <p>it4: {{it4}}</p>
-</div>`,
-    data: {
-        it1: "this is it1",
-        it2type: {
-            label: "hello"
-        },
-        it2value: "abc",
-        it3type: {
-            kind: "object",
-            properties: [
-                { name: "A", label: "first A" },
-                { name: "B", label: "then B" },
-                { name: "C" }
-            ]
-        },
-        it3value: { A: "hello", B: "world", C: ["1", "2", "3"] },
-        it4: "aa"
-    }
-});
