@@ -86,7 +86,7 @@ Vue.component("wiki-vue", {
     <p>document: '{{document}}'</p>
     <p>value:'{{value}}'</p>
     <p>value-vue</p>
-    <value-vue :type='it3type' value="it3value" />
+    <dyn-vue label='xxx' :type='it3type' :value="it3value" />
   
 </div>`,
     data: () => {
@@ -101,7 +101,7 @@ Vue.component("wiki-vue", {
                 ]
             },
             it3value: { A: "hello", B: "world", C: ["1", "2", "3"] },
-    
+
         };
     },
     methods: {
