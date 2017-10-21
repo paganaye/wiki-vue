@@ -50,7 +50,6 @@ Vue.component("object-vue", {
 </div>`,
     computed: {
         propertyVuepoint: () => {
-            debugger;
             return (prop: any, value: any) => {
                 return {
                     schema: prop.schema,
@@ -111,17 +110,31 @@ Vue.component("dyn-vue", {
         return { debug: false };
     },
     computed: {
-        vueType: () => {
+        getSchema: () => {
+            return (vuePoint: Vuepoint) => {
+                var schema = vuePoint.schema;
+                if (schema) return schema;
+
+                var value = vuePoint.value;
+                if (Array.isArray(value)) schema = { kind: "array" };
+                else if (typeof value === "object") schema = { kind: "object" };
+                else schema = { kind: "value" };
+
+                return schema;
+            };
+        },
+        vueType: function(this:any) {
             // I should not need a value here but this.value is messed up by typescript
             return (vuePoint: Vuepoint) => {
-                debugger;
-                var value = vuePoint.value;
-                var result;
-                if (Array.isArray(value)) result = "array-vue";
-                else if (typeof value === "object") result = "object-vue";
-                else result = "value-vue";
-                console.log("dyn-vue", value, "=>", result);
-                return result;
+                var schema = this.getSchema(vuePoint);
+                switch (schema.kind) {
+                    case "array":
+                    case "object":
+                    case "value":
+                        return schema.kind + "-vue";
+                    default:
+                        return "value-vue";
+                }
             };
         }
     }
