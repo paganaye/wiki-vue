@@ -79,29 +79,27 @@ Vue.component("dyn-vue", {
 
 
 Vue.component("wiki-vue", {
-    props: ["document"],
+    props: ["type", "document"],
     template: `<div>
     <p>Loading table:'{{table}}'</p>
     <p>Loading id: '{{id}}'</p>
     <p>document: '{{document}}'</p>
     <p>value:'{{value}}'</p>
     <p>value-vue</p>
-    <dyn-vue label='xxx' :type='it3type' :value="it3value" />
+    <dyn-vue label='xxx' :type='it3type' :value="value" />
   
 </div>`,
     data: () => {
         return {
             value: "loading...",
             it3type: {
-                kind: "object",
-                properties: [
-                    { name: "A", label: "first A" },
-                    { name: "B", label: "then B" },
-                    { name: "C" }
+                "kind": "object",
+                "properties": [
+                    { "name": "A", "label": "first A" },
+                    { "name": "B", "label": "then B" },
+                    { "name": "C" }
                 ]
-            },
-            it3value: { A: "hello", B: "world", C: ["1", "2", "3"] },
-
+            }
         };
     },
     methods: {
