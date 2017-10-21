@@ -30,13 +30,62 @@ interface Vuepoint {
     value: any;
     schema: Schema;
 }
-Vue.component("value-vue", {
+
+var vues: { [key: string]: string } = {
+    'object': 'object-vue',
+    'array': 'array-vue',
+    'string': 'text-field-vue',
+    'number': 'text-field-vue',
+    'select': 'select-vue'
+};
+
+Vue.component("text-field-vue", {
     props: ["vuepoint"],
     template: `<div>
     <v-text-field
         :label="vuepoint.label || (vuepoint.schema && (vuepoint.schema.label || vuepoint.schema.name)) || '???'"
-        v-model="vuepoint.value"></v-text-field>
-</div>`
+        v-model="vuepoint.value" :type="inputType"></v-text-field>
+</div>`,
+    computed: {
+        inputType: function (this: any) {
+            var vuepoint = (this.vuepoint as Vuepoint);
+            var kind = vuepoint.schema && vuepoint.schema.kind;
+            switch (kind) {
+                case 'number':
+                case 'color':
+                case 'date':
+                case 'datetime-local':
+                case 'email':
+                case 'month':
+                case 'number':
+                case 'range':
+                case 'search':
+                case 'tel':
+                case 'time':
+                case 'url':
+                case 'week':
+                    console.log("input-type", kind)
+                    return kind;
+                default:
+                    return 'text'
+            }
+        }
+    }
+});
+
+Vue.component("select-vue", {
+    props: ["vuepoint"],
+    template: `<div>
+    <v-select
+        :label="vuepoint.label || (vuepoint.schema && (vuepoint.schema.label || vuepoint.schema.name)) || '???'"
+        v-model="vuepoint.value" :items="items"></v-select>
+</div>`,
+    computed: {
+        items: function (this: any) {
+            console.log("vuepoint", this.vuepoint);
+            return this.vuepoint.schema.list;
+        }
+    }
 });
 
 Vue.component("object-vue", {
@@ -64,7 +113,6 @@ Vue.component("object-vue", {
 Vue.component("array-vue", {
     props: ["vuepoint"],
     template: `<div>
-    <p>{{label}}</p>
     <div  id="list" ref="list">
         <div v-for="(item, index) in vuepoint.value" class="array-item">
             <div class="array-item-handle">{{index}}</div>
@@ -111,30 +159,24 @@ Vue.component("dyn-vue", {
     },
     computed: {
         getSchema: () => {
-            return (vuePoint: Vuepoint) => {
-                var schema = vuePoint.schema;
+            return (vuepoint: Vuepoint) => {
+                var schema = vuepoint.schema;
                 if (schema) return schema;
 
-                var value = vuePoint.value;
+                var value = vuepoint.value;
                 if (Array.isArray(value)) schema = { kind: "array" };
                 else if (typeof value === "object") schema = { kind: "object" };
-                else schema = { kind: "value" };
+                else schema = { kind: "string" };
 
                 return schema;
             };
         },
-        vueType: function(this:any) {
+        vueType: function (this: any) {
             // I should not need a value here but this.value is messed up by typescript
-            return (vuePoint: Vuepoint) => {
-                var schema = this.getSchema(vuePoint);
-                switch (schema.kind) {
-                    case "array":
-                    case "object":
-                    case "value":
-                        return schema.kind + "-vue";
-                    default:
-                        return "value-vue";
-                }
+            return (vuepoint: Vuepoint) => {
+                var schema = this.getSchema(vuepoint);
+                var result = vues[schema.kind] || "text-field-vue";
+                return result;
             };
         }
     }
