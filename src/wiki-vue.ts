@@ -103,7 +103,7 @@ Vue.component("object-vue", {
                 return {
                     schema: prop.schema,
                     label: prop.label || prop.name,
-                    value: value[prop.name]
+                    value: value && value[prop.name]
                 }
             }
         }
@@ -119,11 +119,21 @@ Vue.component("array-vue", {
             <div class="array-item-content">
                 <dyn-vue :vuepoint="itemVuepoint(vuepoint, item,index)" />
             </div>
-            <v-btn color="secondary">Delete</v-btn>
+            <v-btn color="secondary" @click="deleteItem(item, index)">Delete</v-btn>
         </div>    
     </div>
-    <v-btn color="primary">Add</v-btn>
+    <v-btn color="primary" @click="addItem">Add</v-btn>
 </div>`,
+    methods: {
+        deleteItem: function (this: any, item: any, index: number) {
+            var vuepoint: Vuepoint = this.vuepoint;
+            vuepoint.value.splice(index, 1);
+        },
+        addItem: function (this: any, item: any, index: number) {
+            var vuepoint: Vuepoint = this.vuepoint;
+            vuepoint.value.push({});
+        }
+    },
     computed: {
         itemVuepoint: function (this: any) {
             return (vuepoint: Vuepoint, item: any, index: number) => {
@@ -233,7 +243,7 @@ Vue.component("wiki-vue", {
     },
     watch: {
         document: function (this: any) {
-            this.loadFromDb();
+            this.loadValueFromDb();
             this.loadSchemaFromDb();
         }
     },

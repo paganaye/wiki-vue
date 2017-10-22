@@ -28,7 +28,7 @@ Vue.component("select-vue", {
         <span>Recent</span>
         <v-icon>history</v-icon>
     </v-btn>
-    <v-btn primary flat @click="b2">
+    <v-btn color="primary" flat @click="b2">
         <span>Stop</span>
         <v-icon>history</v-icon>
     </v-btn>

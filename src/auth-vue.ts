@@ -129,8 +129,8 @@ Vue.component("auth-vue", {
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn primary flat @click="doLogin">Login</v-btn>
-                <v-btn primary flat @click="auth.loginDialog = false">Cancel</v-btn>
+                <v-btn color="primary" flat @click="doLogin">Login</v-btn>
+                <v-btn color="primary" flat @click="auth.loginDialog = false">Cancel</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -181,8 +181,8 @@ Vue.component("auth-vue", {
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn primary flat @click="registerDialog = false">Register</v-btn>
-                <v-btn primary flat @click="registerDialog = false">Cancel</v-btn>
+                <v-btn color="primary" flat @click="registerDialog = false">Register</v-btn>
+                <v-btn color="primary" flat @click="registerDialog = false">Cancel</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -202,7 +202,7 @@ Vue.component("auth-vue", {
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn primary flat @click="resetPasswordDialog = false">Send password recovery email</v-btn>
+                <v-btn color="primary" flat @click="resetPasswordDialog = false">Send password recovery email</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>    
