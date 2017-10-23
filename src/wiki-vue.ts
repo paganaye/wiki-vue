@@ -31,6 +31,14 @@ interface Vuepoint {
     schema: Schema;
 }
 
+function isEditing(component: Vue): boolean {
+    while (component) {
+        if ((component as any).isEditable) return (component as any).editing;
+        component = component.$parent;
+    }
+    return false;
+}
+
 var vues: { [key: string]: string } = {
     'object': 'object-vue',
     'array': 'array-vue',
@@ -89,7 +97,7 @@ Vue.component("select-vue", {
 });
 
 Vue.component("object-vue", {
-    props: ["vuepoint"],
+    props: ["vuepoint", "debug"],
     template: `<div>
     <p>{{vuepoint.label}}</p>
     <div v-for="prop in vuepoint.schema.properties">
@@ -100,10 +108,12 @@ Vue.component("object-vue", {
     computed: {
         propertyVuepoint: () => {
             return (prop: any, value: any) => {
+                if (value == null) value = {};
+                if (value[prop.name] == null) value[prop.name] = {};
                 return {
                     schema: prop.schema,
                     label: prop.label || prop.name,
-                    value: value && value[prop.name]
+                    value: value[prop.name]
                 }
             }
         }
@@ -111,7 +121,7 @@ Vue.component("object-vue", {
 });
 
 Vue.component("array-vue", {
-    props: ["vuepoint"],
+    props: ["vuepoint", "page"],
     template: `<div>
     <div  id="list" ref="list">
         <div v-for="(item, index) in vuepoint.value" class="array-item">
@@ -119,10 +129,10 @@ Vue.component("array-vue", {
             <div class="array-item-content">
                 <dyn-vue :vuepoint="itemVuepoint(vuepoint, item,index)" />
             </div>
-            <v-btn color="secondary" @click="deleteItem(item, index)">Delete</v-btn>
+            <v-btn color="secondary" v-if="editing" @click="deleteItem(item, index)">Delete</v-btn>
         </div>    
     </div>
-    <v-btn color="primary" @click="addItem">Add</v-btn>
+    <v-btn color="primary" v-if="editing" @click="addItem">Add</v-btn>
 </div>`,
     methods: {
         deleteItem: function (this: any, item: any, index: number) {
@@ -131,10 +141,14 @@ Vue.component("array-vue", {
         },
         addItem: function (this: any, item: any, index: number) {
             var vuepoint: Vuepoint = this.vuepoint;
+            if (!Array.isArray(vuepoint.value)) vuepoint.value = [];
             vuepoint.value.push({});
         }
     },
     computed: {
+        editing: function (this: any) {
+            return isEditing(this);
+        },
         itemVuepoint: function (this: any) {
             return (vuepoint: Vuepoint, item: any, index: number) => {
                 return {
@@ -149,12 +163,16 @@ Vue.component("array-vue", {
         console.log("this", this);
         console.log("$refs", this.$refs);
         var list = this.$refs.list;
-        Sortable.create(list, {});
+        if (list) {
+            Sortable.create(list, {});
+        } else {
+            console.error("Cannot find element list", this)
+        }
     }
 });
 
 Vue.component("dyn-vue", {
-    props: ["vuepoint"],
+    props: ["vuepoint", "debug"],
     template: `<div>
     <div v-if="debug">
         <p>schema:{{vuepoint.schema}}</p>
@@ -164,9 +182,6 @@ Vue.component("dyn-vue", {
     <component :is="vueType(vuepoint)" 
         :vuepoint="vuepoint"></component>
 </div>`,
-    data: () => {
-        return { debug: false };
-    },
     computed: {
         getSchema: () => {
             return (vuepoint: Vuepoint) => {
@@ -196,18 +211,30 @@ Vue.component("wiki-vue", {
     props: ["document"],
     template: `<div>
     <p>Loading table:'{{table}}'</p>
-    <p>Loading id: '{{id}}'</p>
-    <p>document: '{{document}}'</p>
     <dyn-vue :vuepoint="vuepoint" />  
+    <v-btn v-if="!editing" color="primary" @click="edit">Edit</v-btn>
+    <v-btn v-if="editing" color="primary" @click="save">Save</v-btn>
+    <v-btn v-if="editing" color="secondary" @click="cancel">Cancel</v-btn>
 </div>`,
     data: () => {
         return {
+            editing: false,
+            isEditable: true,
             vuepoint: {
                 value: "loading"
             }
         };
     },
     methods: {
+        edit: function (this: any) {
+            this.editing = true
+        },
+        save: function (this: any) {
+            this.editing = false
+        },
+        cancel: function (this: any) {
+            this.editing = false
+        },
         loadValueFromDb: function (this: any) {
             var vuepoint = this.$data.vuepoint;
             var db = firebase.database();
