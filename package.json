@@ -28,6 +28,7 @@
     "vuetify": "^0.16.5"
   },
   "dependencies": {
-    "firebase": "^4.5.1"
+    "firebase": "^4.5.1",
+    "sortablejs": "^1.6.1"
   }
 }
