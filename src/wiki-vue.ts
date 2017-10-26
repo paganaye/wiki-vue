@@ -2,6 +2,7 @@ import * as Vue from 'vue';
 import Vuetify from 'vuetify';
 import * as firebase from 'firebase';
 import Sortable = require('sortablejs');
+import Component from "vue-class-component";
 
 interface Schema {
     kind: string;
@@ -25,9 +26,9 @@ interface TextSchema extends Schema {
 interface SelectSchema extends Schema {
     kind: "select";
 }
-interface Vuepoint {
+interface Property {
+    path: string;
     label: string;
-    value: any;
     schema: Schema;
 }
 
@@ -47,17 +48,49 @@ var vues: { [key: string]: string } = {
     'select': 'select-vue'
 };
 
-Vue.component("text-field-vue", {
-    props: ["vuepoint"],
+@Component({
     template: `<div>
-    <v-text-field
-        :label="vuepoint.label || (vuepoint.schema && (vuepoint.schema.label || vuepoint.schema.name)) || '???'"
-        v-model="vuepoint.value" :type="inputType"></v-text-field>
+    <button @click="onClick">Click!</button>
+    <p>some text here</p>
+    <p>and calculated one {{x}}</p>
 </div>`,
     computed: {
+        x: function (this: MyComponent) {
+            return this.getX();
+        }
+    }
+})
+class MyComponent extends Vue {
+    // Les données initiales peuvent être déclarées comme des propriétés de l'instance
+    message: string = 'Bonjour !'
+    // Les méthodes peuvent être déclarées comme des méthodes d'instance
+    onClick(): void {
+        window.alert(this.message);
+        this.message = "Au revoir !"
+    }
+
+    getX(): string {
+        console.log("calculating X");
+        return this.message.toUpperCase();
+    }
+
+}
+
+
+Vue.component("text-field-vue", {
+    props: ["property", "value"],
+    template: `<div>
+    <v-text-field
+        :label="property.label || (property.schema && (property.schema.label || property.schema.name)) || '???'"
+        v-model="value" :type="inputType"></v-text-field>
+</div>`,
+    beforeUpdate: function (this: any) {
+        console.log("text-field-vue", "beforeUpdate");
+    },
+    computed: {
         inputType: function (this: any) {
-            var vuepoint = (this.vuepoint as Vuepoint);
-            var kind = vuepoint.schema && vuepoint.schema.kind;
+            var property = (this.property as Property);
+            var kind = property.schema && property.schema.kind;
             switch (kind) {
                 case 'number':
                 case 'color':
@@ -82,79 +115,111 @@ Vue.component("text-field-vue", {
 });
 
 Vue.component("select-vue", {
-    props: ["vuepoint"],
+    props: ["property", "value"],
     template: `<div>
     <v-select
-        :label="vuepoint.label || (vuepoint.schema && (vuepoint.schema.label || vuepoint.schema.name)) || '???'"
-        v-model="vuepoint.value" :items="items"></v-select>
+        :label="property.label || (property.schema && (property.schema.label || property.schema.name)) || '???'"
+        v-model="value" :items="items"></v-select>
 </div>`,
+    beforeUpdate: function (this: any) {
+        console.log("select-vue", "beforeUpdate");
+    },
     computed: {
         items: function (this: any) {
-            console.log("vuepoint", this.vuepoint);
-            return this.vuepoint.schema.list;
+            console.log("property", this.property, "value", this.value);
+            return this.property.schema.list;
         }
     }
 });
 
 Vue.component("object-vue", {
-    props: ["vuepoint", "debug"],
+    props: ["property", "value", "debug"],
     template: `<div>
-    <p>{{vuepoint.label}}</p>
-    <div v-for="prop in vuepoint.schema.properties">
+    <p>{{property.label}}</p>
+    <div v-for="prop in property.schema.properties">
         <dyn-vue 
-            :vuepoint='propertyVuepoint(prop, vuepoint.value)' />
+            :property="memberProperty(prop, value)" v-bind="memberValue(prop, value)" />
     </div>
 </div>`,
+    beforeCreate: function (this: any) {
+    },
+    created: function (this: any) {
+    },
+    beforeUpdate: function (this: any) {
+        console.log("object-vue", "beforeUpdate");
+    },
     computed: {
-        propertyVuepoint: () => {
-            return (prop: any, value: any) => {
-                if (value == null) value = {};
-                if (value[prop.name] == null) value[prop.name] = {};
+        memberProperty: function (this: any) {
+            return (prop: any, objectValue: any) => {
+                if (objectValue == null) objectValue = {};
+                var itemValue = objectValue[prop.name];
+                if (itemValue == null) {
+                    switch (prop.schema.kind) {
+                        case "array":
+                            itemValue = [];
+                            break;
+                        case "object":
+                            itemValue = {};
+                            break;
+                    }
+                    objectValue[prop.name] = itemValue;
+                }
                 return {
                     schema: prop.schema,
                     label: prop.label || prop.name,
-                    value: value[prop.name]
+                    value: itemValue
                 }
             }
+        },
+        memberValue: function (this: any) {
+            return (prop: any, objectValue: any) => {
+                if (objectValue == null) objectValue = {};
+                var itemValue = objectValue[prop.name];
+                return itemValue;
+            }
         }
+
     }
 });
 
 Vue.component("array-vue", {
-    props: ["vuepoint", "page"],
+    props: ["property", "value"],
     template: `<div>
-    <div  id="list" ref="list">
-        <div v-for="(item, index) in vuepoint.value" class="array-item">
+    <div  id="list" ref="list">        
+        <div v-for="(item, index) in value" class="array-item">
             <div class="array-item-handle">{{index}}</div>
             <div class="array-item-content">
-                <dyn-vue :vuepoint="itemVuepoint(vuepoint, item,index)" />
+                <dyn-vue :property="itemProperty(property, item,index)" v-bind:'value[index]' />
             </div>
             <v-btn color="secondary" v-if="editing" @click="deleteItem(item, index)">Delete</v-btn>
         </div>    
     </div>
     <v-btn color="primary" v-if="editing" @click="addItem">Add</v-btn>
 </div>`,
+    beforeCreate: function (this: any) {
+    },
+    created: function (this: any) {
+    },
+    beforeUpdate: function (this: any) {
+        console.log("array-vue", "beforeUpdate");
+    },
     methods: {
         deleteItem: function (this: any, item: any, index: number) {
-            var vuepoint: Vuepoint = this.vuepoint;
-            vuepoint.value.splice(index, 1);
+            this.value.splice(index, 1);
         },
         addItem: function (this: any, item: any, index: number) {
-            var vuepoint: Vuepoint = this.vuepoint;
-            if (!Array.isArray(vuepoint.value)) vuepoint.value = [];
-            vuepoint.value.push({});
+            this.value.push({});
         }
     },
     computed: {
         editing: function (this: any) {
             return isEditing(this);
         },
-        itemVuepoint: function (this: any) {
-            return (vuepoint: Vuepoint, item: any, index: number) => {
+        itemProperty: function (this: any) {
+            return (property: Property, item: any, index: number) => {
                 return {
                     label: '#' + index,
-                    schema: vuepoint.schema && (vuepoint.schema as ArraySchema).itemsSchema || {},
-                    value: item
+                    schema: property.schema && (property.schema as ArraySchema).itemsSchema || {}
                 };
             };
         }
@@ -172,37 +237,42 @@ Vue.component("array-vue", {
 });
 
 Vue.component("dyn-vue", {
-    props: ["vuepoint", "debug"],
+    props: ["property", "value", "debug"],
     template: `<div>
     <div v-if="debug">
-        <p>schema:{{vuepoint.schema}}</p>
-        <p>label:{{vuepoint.label}}</p>
-        <p>value:{{vuepoint.value}}</p>
+        <p>schema:{{property.schema}}</p>
+        <p>label:{{property.label}}</p>
+        <p>value:{{value}}</p>
+        <p>vueType:{{vueType}}</p>
     </div>
-    <component :is="vueType(vuepoint)" 
-        :vuepoint="vuepoint"></component>
+    <component :is="vueType" 
+        :property="property" v-bind="value"></component>
 </div>`,
+    beforeUpdate: function (this: any) {
+        console.log("dyn-vue", "beforeUpdate");
+    },
     computed: {
-        getSchema: () => {
-            return (vuepoint: Vuepoint) => {
-                var schema = vuepoint.schema;
-                if (schema) return schema;
+        getSchema: function (this: any) {
+            var schema = this.property.schema;
+            if (schema) return schema;
 
-                var value = vuepoint.value;
-                if (Array.isArray(value)) schema = { kind: "array" };
-                else if (typeof value === "object") schema = { kind: "object" };
-                else schema = { kind: "string" };
+            if (Array.isArray(this.value)) schema = { kind: "array" };
+            else if (typeof this.value === "object") schema = { kind: "object" };
+            else schema = { kind: "string" };
 
-                return schema;
-            };
+            return schema;
         },
         vueType: function (this: any) {
-            // I should not need a value here but this.value is messed up by typescript
-            return (vuepoint: Vuepoint) => {
-                var schema = this.getSchema(vuepoint);
-                var result = vues[schema.kind] || "text-field-vue";
-                return result;
-            };
+
+            console.log("calculating dyn-vue::vueType");
+            console.log("this.property", JSON.stringify(this.property));
+            console.log("this.value", JSON.stringify(this.value));
+
+            var property: Property = this.property;
+            var schema = this.getSchema;
+            var result = vues[schema.kind] || "text-field-vue";
+            return result;
+
         }
     }
 });
@@ -211,19 +281,27 @@ Vue.component("wiki-vue", {
     props: ["document"],
     template: `<div>
     <p>Loading table:'{{table}}'</p>
-    <dyn-vue :vuepoint="vuepoint" />  
+    <dyn-vue :property="property" v-bind="this.value" debug="true" />  
     <v-btn v-if="!editing" color="primary" @click="edit">Edit</v-btn>
     <v-btn v-if="editing" color="primary" @click="save">Save</v-btn>
     <v-btn v-if="editing" color="secondary" @click="cancel">Cancel</v-btn>
+    <p>xx</p>
+    <my-component />    
 </div>`,
+    components: {
+        "my-component": MyComponent
+    },
     data: () => {
         return {
             editing: false,
             isEditable: true,
-            vuepoint: {
-                value: "loading"
+            value: {},
+            property: {
             }
         };
+    },
+    beforeUpdate: function (this: any) {
+        console.log("wiki-vue", "beforeUpdate");
     },
     methods: {
         edit: function (this: any) {
@@ -236,24 +314,26 @@ Vue.component("wiki-vue", {
             this.editing = false
         },
         loadValueFromDb: function (this: any) {
-            var vuepoint = this.$data.vuepoint;
+            var that = this;
+            var property = this.$data.property;
             var db = firebase.database();
             var ref = db.ref().child(this.table || "home");
             if (this.id) ref = ref.child(this.id);
-            vuepoint.value = "loading...";
 
             console.log("db", db, "ref", ref);
             // Attach an asynchronous callback to read the data at our posts reference
             ref.on("value", function (snapshot) {
-                vuepoint.value = snapshot.val();
-                console.log("snapshot", vuepoint.value);
+                var val = snapshot.val();
+                Vue.set(that, "value", val);
+                console.log("firebase value", JSON.stringify(that.value));
 
             }, function (errorObject: any) {
                 console.log("The read failed: " + errorObject.code);
             });
         },
         loadSchemaFromDb: function (this: any) {
-            var vuepoint = this.$data.vuepoint;
+            var that = this;
+            var property = that.property;
             var db = firebase.database();
             var ref = db.ref().child("schema");
             if (this.id) ref = ref.child(this.table);
@@ -261,8 +341,9 @@ Vue.component("wiki-vue", {
             console.log("db", db, "ref", ref);
             // Attach an asynchronous callback to read the data at our posts reference
             ref.on("value", function (snapshot) {
-                vuepoint.schema = snapshot.val();
-                console.log("snapshot", vuepoint.schema);
+                var val = snapshot.val();
+                Vue.set(that.property, "schema", val)
+                console.log("firebase schema", JSON.stringify(property.schema));
             }, function (errorObject: any) {
                 console.log("The schema read failed: " + errorObject.code);
             });
@@ -297,5 +378,3 @@ Vue.component("wiki-vue", {
         // Get a database reference to our posts
     }
 });
-
-

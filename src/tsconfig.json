@@ -8,6 +8,7 @@
         "moduleResolution": "node",
         "alwaysStrict": true,
         "noEmit": true,
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true
     }
 }
