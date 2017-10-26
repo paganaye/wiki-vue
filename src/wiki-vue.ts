@@ -52,30 +52,55 @@ var vues: { [key: string]: string } = {
     template: `<div>
     <button @click="onClick">Click!</button>
     <p>some text here</p>
-    <p>and calculated one {{x}}</p>
-</div>`,
+    <p>base xx {{xx}}</p>
+    <p>base yy {{yy}}</p>
+    </div>`,
+    props: ["yy"],
     computed: {
-        x: function (this: MyComponent) {
-            return this.getX();
+        xx: function (this: MyComponent) {
+            //return "*" + this.message + "*";
+            return this.logAndUppercase();
         }
     }
 })
-class MyComponent extends Vue {
+class BaseComponent extends Vue {
+    message: string = 'Basejour !'
+
+    logAndUppercase(this: BaseComponent) {
+        console.log("logAndUppercase", this.message);
+        return "~~~ " + this.message.toUpperCase() + " ~~~";
+    }
+}
+
+@Component({
+    xtemplate: `<div>
+    <button @click="onClick">Click!</button>
+    <p>some text here</p>
+    <p>xx {{xx}}</p>
+    <p>yy {{yy}}</p>
+    </div>`,
+    xprops: ["yy"],
+    computed: {
+        xy: function (this: MyComponent) {
+            //return "*" + this.message + "*";
+            return this.logAndUppercase();
+        }
+    }
+})
+class MyComponent extends BaseComponent {
+    yy: number; // = 55;
+
+    constructor() {
+        super();
+        this.message = "derived";
+    }
     // Les données initiales peuvent être déclarées comme des propriétés de l'instance
-    message: string = 'Bonjour !'
     // Les méthodes peuvent être déclarées comme des méthodes d'instance
     onClick(): void {
         window.alert(this.message);
         this.message = "Au revoir !"
     }
-
-    getX(): string {
-        console.log("calculating X");
-        return this.message.toUpperCase();
-    }
-
 }
-
 
 Vue.component("text-field-vue", {
     props: ["property", "value"],
@@ -277,6 +302,9 @@ Vue.component("dyn-vue", {
     }
 });
 
+Vue.component("my-component",MyComponent);
+
+
 Vue.component("wiki-vue", {
     props: ["document"],
     template: `<div>
@@ -286,11 +314,8 @@ Vue.component("wiki-vue", {
     <v-btn v-if="editing" color="primary" @click="save">Save</v-btn>
     <v-btn v-if="editing" color="secondary" @click="cancel">Cancel</v-btn>
     <p>xx</p>
-    <my-component />    
+    <my-component yy="33" />    
 </div>`,
-    components: {
-        "my-component": MyComponent
-    },
     data: () => {
         return {
             editing: false,
