@@ -48,61 +48,15 @@ var vues: { [key: string]: string } = {
     'select': 'select-vue'
 };
 
-@Component({
-    template: `<div>
-    <button @click="onClick">Click!</button>
-    <p>some text here</p>
-    <p>base xx {{xx}}</p>
-    <p>base yy {{yy}}</p>
-    </div>`,
-    props: ["yy"],
-    computed: {
-        xx: function (this: MyComponent) {
-            //return "*" + this.message + "*";
-            return this.logAndUppercase();
-        }
-    }
-})
+// Base Component
+
+@Component({})
 class BaseComponent extends Vue {
-    message: string = 'Basejour !'
-
-    logAndUppercase(this: BaseComponent) {
-        console.log("logAndUppercase", this.message);
-        return "~~~ " + this.message.toUpperCase() + " ~~~";
-    }
 }
 
+
+// TextFieldVue
 @Component({
-    xtemplate: `<div>
-    <button @click="onClick">Click!</button>
-    <p>some text here</p>
-    <p>xx {{xx}}</p>
-    <p>yy {{yy}}</p>
-    </div>`,
-    xprops: ["yy"],
-    computed: {
-        xy: function (this: MyComponent) {
-            //return "*" + this.message + "*";
-            return this.logAndUppercase();
-        }
-    }
-})
-class MyComponent extends BaseComponent {
-    yy: number; // = 55;
-
-    constructor() {
-        super();
-        this.message = "derived";
-    }
-    // Les données initiales peuvent être déclarées comme des propriétés de l'instance
-    // Les méthodes peuvent être déclarées comme des méthodes d'instance
-    onClick(): void {
-        window.alert(this.message);
-        this.message = "Au revoir !"
-    }
-}
-
-Vue.component("text-field-vue", {
     props: ["property", "value"],
     template: `<div>
     <v-text-field
@@ -137,9 +91,13 @@ Vue.component("text-field-vue", {
             }
         }
     }
-});
+})
+class TextFieldVue extends BaseComponent {
+}
+Vue.component("text-field-vue", TextFieldVue);
 
-Vue.component("select-vue", {
+// SelectVue
+@Component({
     props: ["property", "value"],
     template: `<div>
     <v-select
@@ -155,9 +113,13 @@ Vue.component("select-vue", {
             return this.property.schema.list;
         }
     }
-});
+})
+class SelectVue extends BaseComponent {
+}
+Vue.component("select-vue", SelectVue);
 
-Vue.component("object-vue", {
+// ObjectVue
+@Component({
     props: ["property", "value", "debug"],
     template: `<div>
     <p>{{property.label}}</p>
@@ -205,9 +167,13 @@ Vue.component("object-vue", {
         }
 
     }
-});
+})
+class ObjectVue extends BaseComponent {
+}
+Vue.component("object-vue", ObjectVue);
 
-Vue.component("array-vue", {
+// ArrayVue
+@Component({
     props: ["property", "value"],
     template: `<div>
     <div  id="list" ref="list">        
@@ -259,9 +225,15 @@ Vue.component("array-vue", {
             console.error("Cannot find element list", this)
         }
     }
-});
+})
+class ArrayVue extends BaseComponent {
 
-Vue.component("dyn-vue", {
+}
+
+Vue.component("array-vue", ArrayVue);
+
+// DynVue
+@Component({
     props: ["property", "value", "debug"],
     template: `<div>
     <div v-if="debug">
@@ -300,13 +272,14 @@ Vue.component("dyn-vue", {
 
         }
     }
-});
+})
+class DynVue extends BaseComponent {
 
-Vue.component("my-component",MyComponent);
+}
+Vue.component("dyn-vue", DynVue);
 
-
-Vue.component("wiki-vue", {
-    props: ["document"],
+// WikiVue
+@Component({
     template: `<div>
     <p>Loading table:'{{table}}'</p>
     <dyn-vue :property="property" v-bind="this.value" debug="true" />  
@@ -314,72 +287,8 @@ Vue.component("wiki-vue", {
     <v-btn v-if="editing" color="primary" @click="save">Save</v-btn>
     <v-btn v-if="editing" color="secondary" @click="cancel">Cancel</v-btn>
     <p>xx</p>
-    <my-component yy="33" />    
 </div>`,
-    data: () => {
-        return {
-            editing: false,
-            isEditable: true,
-            value: {},
-            property: {
-            }
-        };
-    },
-    beforeUpdate: function (this: any) {
-        console.log("wiki-vue", "beforeUpdate");
-    },
-    methods: {
-        edit: function (this: any) {
-            this.editing = true
-        },
-        save: function (this: any) {
-            this.editing = false
-        },
-        cancel: function (this: any) {
-            this.editing = false
-        },
-        loadValueFromDb: function (this: any) {
-            var that = this;
-            var property = this.$data.property;
-            var db = firebase.database();
-            var ref = db.ref().child(this.table || "home");
-            if (this.id) ref = ref.child(this.id);
-
-            console.log("db", db, "ref", ref);
-            // Attach an asynchronous callback to read the data at our posts reference
-            ref.on("value", function (snapshot) {
-                var val = snapshot.val();
-                Vue.set(that, "value", val);
-                console.log("firebase value", JSON.stringify(that.value));
-
-            }, function (errorObject: any) {
-                console.log("The read failed: " + errorObject.code);
-            });
-        },
-        loadSchemaFromDb: function (this: any) {
-            var that = this;
-            var property = that.property;
-            var db = firebase.database();
-            var ref = db.ref().child("schema");
-            if (this.id) ref = ref.child(this.table);
-
-            console.log("db", db, "ref", ref);
-            // Attach an asynchronous callback to read the data at our posts reference
-            ref.on("value", function (snapshot) {
-                var val = snapshot.val();
-                Vue.set(that.property, "schema", val)
-                console.log("firebase schema", JSON.stringify(property.schema));
-            }, function (errorObject: any) {
-                console.log("The schema read failed: " + errorObject.code);
-            });
-        }
-    },
-    watch: {
-        document: function (this: any) {
-            this.loadValueFromDb();
-            this.loadSchemaFromDb();
-        }
-    },
+    props: ["document"],
     computed: {
         table: function (this: any) {
             var pos = this.firstSpacePos;
@@ -395,6 +304,15 @@ Vue.component("wiki-vue", {
             return pos;
         }
     },
+    beforeUpdate: function (this: any) {
+        console.log("wiki-vue", "beforeUpdate");
+    },
+    watch: {
+        document: function (this: any) {
+            this.loadValueFromDb();
+            this.loadSchemaFromDb();
+        }
+    },
     mounted: function (this: any) {
         console.log("created", "this", this, "table", this.table, "id", this.id);
         // Import Admin SDK
@@ -402,4 +320,57 @@ Vue.component("wiki-vue", {
         this.loadValueFromDb();
         // Get a database reference to our posts
     }
-});
+})
+class WikiVue extends BaseComponent {
+    editing = false;
+    isEditable = true;
+    value = {};
+    property = {};
+
+    edit(this: any) {
+        this.editing = true
+    }
+    save(this: any) {
+        this.editing = false
+    }
+    cancel(this: any) {
+        this.editing = false
+    }
+    loadValueFromDb(this: any) {
+        var that = this;
+        var property = this.$data.property;
+        var db = firebase.database();
+        var ref = db.ref().child(this.table || "home");
+        if (this.id) ref = ref.child(this.id);
+
+        console.log("db", db, "ref", ref);
+        // Attach an asynchronous callback to read the data at our posts reference
+        ref.on("value", function (snapshot) {
+            var val = snapshot.val();
+            Vue.set(that, "value", val);
+            console.log("firebase value", JSON.stringify(that.value));
+
+        }, function (errorObject: any) {
+            console.log("The read failed: " + errorObject.code);
+        });
+    }
+    loadSchemaFromDb(this: any) {
+        var that = this;
+        var property = that.property;
+        var db = firebase.database();
+        var ref = db.ref().child("schema");
+        if (this.id) ref = ref.child(this.table);
+
+        console.log("db", db, "ref", ref);
+        // Attach an asynchronous callback to read the data at our posts reference
+        ref.on("value", function (snapshot) {
+            var val = snapshot.val();
+            Vue.set(that.property, "schema", val)
+            console.log("firebase schema", JSON.stringify(property.schema));
+        }, function (errorObject: any) {
+            console.log("The schema read failed: " + errorObject.code);
+        });
+    }
+}
+
+Vue.component("wiki-vue", WikiVue);
