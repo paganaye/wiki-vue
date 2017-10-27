@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "firebase": "^4.5.1",
-    "vue-class-component": "^6.0.0"
+    "vue-class-component": "^6.0.0",
+    "sortablejs": "^1.6.1"
   }
 }
