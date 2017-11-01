@@ -123,9 +123,9 @@ Vue.component("select-vue", SelectVue);
     props: ["property", "value", "debug"],
     template: `<div>
     <p>{{property.label}}</p>
-    <div v-for="prop in property.schema.properties">
+    <div v-for="prop in properties()">
         <dyn-vue 
-            :property="memberProperty(prop, value)" v-bind="memberValue(prop, value)" />
+            :property="dynProperty(prop, value)" v-model="memberValue(prop, value)" />
     </div>
 </div>`,
     beforeCreate: function (this: any) {
@@ -135,37 +135,37 @@ Vue.component("select-vue", SelectVue);
     beforeUpdate: function (this: any) {
         console.log("object-vue", "beforeUpdate");
     },
-    computed: {
-        memberProperty: function (this: any) {
-            return (prop: any, objectValue: any) => {
-                if (objectValue == null) objectValue = {};
-                var itemValue = objectValue[prop.name];
-                if (itemValue == null) {
-                    switch (prop.schema.kind) {
-                        case "array":
-                            itemValue = [];
-                            break;
-                        case "object":
-                            itemValue = {};
-                            break;
-                    }
-                    objectValue[prop.name] = itemValue;
+    methods: {
+        properties: function (this: any) {
+            if (this.property && this.property.schema && this.property.schema.properties) {
+                return this.property.schema.properties;
+            } else return [];
+        },
+        dynProperty: function (this: any, prop: any, objectValue: any) {
+            if (objectValue == null) objectValue = {};
+            var itemValue = objectValue[prop.name];
+            if (itemValue == null) {
+                switch (prop.schema.kind) {
+                    case "array":
+                        itemValue = [];
+                        break;
+                    case "object":
+                        itemValue = {};
+                        break;
                 }
-                return {
-                    schema: prop.schema,
-                    label: prop.label || prop.name,
-                    value: itemValue
-                }
+                objectValue[prop.name] = itemValue;
+            }
+            return {
+                schema: prop.schema,
+                label: prop.label || prop.name,
+                value: itemValue
             }
         },
-        memberValue: function (this: any) {
-            return (prop: any, objectValue: any) => {
-                if (objectValue == null) objectValue = {};
-                var itemValue = objectValue[prop.name];
-                return itemValue;
-            }
+        memberValue: function (this: any, prop: any, objectValue: any) {
+            if (objectValue == null) objectValue = {};
+            var itemValue = objectValue[prop.name];
+            return itemValue;
         }
-
     }
 })
 class ObjectVue extends BaseComponent {
@@ -180,7 +180,7 @@ Vue.component("object-vue", ObjectVue);
         <div v-for="(item, index) in value" class="array-item">
             <div class="array-item-handle">{{index}}</div>
             <div class="array-item-content">
-                <dyn-vue :property="itemProperty(property, item,index)" v-bind:'value[index]' />
+                <dyn-vue :property="itemProperty(property, item,index)" v-model="value[index]" />
             </div>
             <v-btn color="secondary" v-if="editing" @click="deleteItem(item, index)">Delete</v-btn>
         </div>    
@@ -243,10 +243,10 @@ Vue.component("array-vue", ArrayVue);
         <p>vueType:{{vueType}}</p>
     </div>
     <component :is="vueType" 
-        :property="property" v-bind="value"></component>
+        :property="property" v-model="value"></component>
 </div>`,
     beforeUpdate: function (this: any) {
-        console.log("dyn-vue", "beforeUpdate");
+        console.log("dyn-vue", "beforeUpdate", this);
     },
     computed: {
         getSchema: function (this: any) {
@@ -276,13 +276,14 @@ Vue.component("array-vue", ArrayVue);
 class DynVue extends BaseComponent {
 
 }
+
 Vue.component("dyn-vue", DynVue);
 
 // WikiVue
 @Component({
     template: `<div>
     <p>Loading table:'{{table}}'</p>
-    <dyn-vue :property="property" v-bind="this.value" debug="true" />  
+    <dyn-vue :property="property" v-model="this.value" debug="true" />  
     <v-btn v-if="!editing" color="primary" @click="edit">Edit</v-btn>
     <v-btn v-if="editing" color="primary" @click="save">Save</v-btn>
     <v-btn v-if="editing" color="secondary" @click="cancel">Cancel</v-btn>
