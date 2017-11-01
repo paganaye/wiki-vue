@@ -17,6 +17,27 @@
   opacity: 0.2;
 }
 .sortable-drag {
-  border: 10px solid green;
+  border: 1px solid green;
+  padding: 5px;
   opacity: 1 !important;
+}
+
+.array-item-handle {
+  font-size: 35px;
+  line-height: 35px;
+  padding:15px;
+  position: absolute;
+  left: -50px;
+  top: -15px;
+}
+
+.array-item-handle:before {
+  content: "\2261";
+  cursor: pointer;
+  color: gray;
+}
+
+.array-item {
+  margin-left:35px;
+  position: relative;
 }

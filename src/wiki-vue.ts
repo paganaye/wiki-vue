@@ -194,7 +194,7 @@ Vue.component("object-vue", ObjectVue);
     template: `<div>
     <div  id="list" ref="list">        
         <div v-for="(item, index) in value" class="array-item">
-            <div class="array-item-handle">{{index}}</div>
+            <div class="array-item-handle" :title="index"></div>
             <div class="array-item-content">
                 <dyn-vue :property="itemProperty(property, item,index)" v-model="value[index]" />
             </div>
@@ -236,7 +236,9 @@ Vue.component("object-vue", ObjectVue);
         console.log("$refs", this.$refs);
         var list = this.$refs.list;
         if (list) {
-            Sortable.create(list, {});
+            Sortable.create(list, {
+                handle: ".array-item-handle"
+            });
         } else {
             console.error("Cannot find element list", this)
         }
