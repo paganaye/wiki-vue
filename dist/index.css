@@ -13,11 +13,11 @@
   background-color: #eee;
 }
 .sortable-ghost {
-  border: 1px solid red;
+  border: 1px solid green;
   opacity: 0.2;
 }
 .sortable-drag {
-  border: 1px solid green;
+  border: 1px solid darkgreen;
   padding: 5px;
   opacity: 1 !important;
 }
