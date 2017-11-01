@@ -61,7 +61,7 @@ class BaseComponent extends Vue {
     template: `<div>
     <v-text-field
         :label="property.label || (property.schema && (property.schema.label || property.schema.name)) || '???'"
-        v-model="value" :type="inputType"></v-text-field>
+        v-model="inputValue" :type="inputType"></v-text-field>
 </div>`,
     beforeUpdate: function (this: any) {
         console.log("text-field-vue", "beforeUpdate");
@@ -89,6 +89,16 @@ class BaseComponent extends Vue {
                 default:
                     return 'text'
             }
+        },
+        inputValue: {
+            get(): string {
+                return this.value
+            },
+            set(val: string) {
+                console.log("he")
+                this.lazyValue = val
+                this.$emit('input', val)
+            }
         }
     }
 })
@@ -102,12 +112,18 @@ Vue.component("text-field-vue", TextFieldVue);
     template: `<div>
     <v-select
         :label="property.label || (property.schema && (property.schema.label || property.schema.name)) || '???'"
-        v-model="value" :items="items"></v-select>
+        v-model="dynvalue" :items="items"></v-select>
 </div>`,
     beforeUpdate: function (this: any) {
         console.log("select-vue", "beforeUpdate");
     },
     computed: {
+        dynvalue: {
+            get() { return this.value; },
+            set(val: any) {
+                this.$emit('input', val)
+            }
+        },
         items: function (this: any) {
             console.log("property", this.property, "value", this.value);
             return this.property.schema.list;
@@ -123,9 +139,9 @@ Vue.component("select-vue", SelectVue);
     props: ["property", "value", "debug"],
     template: `<div>
     <p>{{property.label}}</p>
-    <div v-for="prop in properties()">
+    <div v-for="prop in properties()" v-if="value && property && property.schema && property.schema.properties">
         <dyn-vue 
-            :property="dynProperty(prop, value)" v-model="memberValue(prop, value)" />
+            :property="dynProperty(prop, value)" v-model="value[prop.name]" />
     </div>
 </div>`,
     beforeCreate: function (this: any) {
@@ -243,12 +259,19 @@ Vue.component("array-vue", ArrayVue);
         <p>vueType:{{vueType}}</p>
     </div>
     <component :is="vueType" 
-        :property="property" v-model="value"></component>
+        :property="property" v-model="dynvalue"></component>
 </div>`,
+
     beforeUpdate: function (this: any) {
         console.log("dyn-vue", "beforeUpdate", this);
     },
     computed: {
+        dynvalue: {
+            get() { return this.value; },
+            set(val: any) {
+                this.$emit('input', val)
+            }
+        },
         getSchema: function (this: any) {
             var schema = this.property.schema;
             if (schema) return schema;
@@ -287,7 +310,7 @@ Vue.component("dyn-vue", DynVue);
     <v-btn v-if="!editing" color="primary" @click="edit">Edit</v-btn>
     <v-btn v-if="editing" color="primary" @click="save">Save</v-btn>
     <v-btn v-if="editing" color="secondary" @click="cancel">Cancel</v-btn>
-    <p>xx</p>
+    <pre>{{jsonvalue()}}</pre>
 </div>`,
     props: ["document"],
     computed: {
@@ -371,6 +394,9 @@ class WikiVue extends BaseComponent {
         }, function (errorObject: any) {
             console.log("The schema read failed: " + errorObject.code);
         });
+    }
+    jsonvalue(): string {
+        return "VALUE: " + JSON.stringify(this.value);
     }
 }
 
