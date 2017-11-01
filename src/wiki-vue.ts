@@ -77,7 +77,6 @@ class BaseComponent extends Vue {
                 case 'datetime-local':
                 case 'email':
                 case 'month':
-                case 'number':
                 case 'range':
                 case 'search':
                 case 'tel':
