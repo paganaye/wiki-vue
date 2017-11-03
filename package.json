@@ -28,9 +28,8 @@
   "dependencies": {
     "vue": "2.4.4",
     "vuetify": "0.16.5",
-    "@types/sortablejs": "1.3.32",
     "firebase": "4.5.1",
-    "sortablejs": "1.6.1",
-    "vue-class-component": "6.0.0"
+    "vue-class-component": "6.0.0",
+    "sortablejs": "1.6.1"
   }
 }

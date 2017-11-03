@@ -1,7 +1,7 @@
 import * as Vue from 'vue';
 import Vuetify from 'vuetify';
 import * as firebase from 'firebase';
-import Sortable = require('sortablejs');
+//import Sortable = require('sortablejs');
 import Component from "vue-class-component";
 
 interface Schema {
@@ -235,9 +235,9 @@ Vue.component("object-vue", ObjectVue);
         console.log("$refs", this.$refs);
         var list = this.$refs.list;
         if (list) {
-            Sortable.create(list, {
-                handle: ".array-item-handle"
-            });
+            //Sortable.create(list, {
+            //    handle: ".array-item-handle"
+            //});
         } else {
             console.error("Cannot find element list", this)
         }
