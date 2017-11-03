@@ -190,7 +190,7 @@ Vue.component("object-vue", ObjectVue);
 declare function require(name: string): any;
 var draggable = require('vuedraggable');
 Vue.component("draggable", draggable.default);
-debugger;
+
 // ArrayVue
 @Component({
     props: ["property", "value"],
