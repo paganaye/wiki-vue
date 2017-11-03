@@ -22,14 +22,15 @@
   },
   "homepage": "https://github.com/paganaye/wiki#readme",
   "devDependencies": {
-    "fuse-box": "2.3.3",
-    "typescript": "2.5.3"
+    "fuse-box": "2.4.0",
+    "typescript": "2.6.1"
   },
   "dependencies": {
-    "vue": "2.4.4",
-    "vuetify": "0.16.5",
-    "firebase": "4.5.1",
-    "vue-class-component": "6.0.0",
-    "sortablejs": "1.6.1"
+    "firebase": "4.6.1",
+    "sortablejs": "1.6.1",
+    "vue": "2.5.2",
+    "vue-class-component": "6.1.0",
+    "vuedraggable": "^2.14.1",
+    "vuetify": "0.16.9"
   }
 }

@@ -4,7 +4,7 @@ import * as AuthVue from "./auth-vue";
 import * as WikiVue from "./wiki-vue";
 
 Vue.use(Vuetify);
-
+Vue.use
 // this console log avoids the tree shaking
 console.log(AuthVue, WikiVue);
 

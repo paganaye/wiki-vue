@@ -187,11 +187,19 @@ class ObjectVue extends BaseComponent {
 }
 Vue.component("object-vue", ObjectVue);
 
+declare function require(name: string): any;
+var draggable = require('vuedraggable');
+Vue.component("draggable", draggable.default);
+debugger;
 // ArrayVue
 @Component({
     props: ["property", "value"],
+    components: {
+        draggable
+    },
+    //@start="drag=true" @end="drag=false"
     template: `<div>
-    <div  id="list" ref="list">        
+    <draggable :list="value" id="list" ref="list">        
         <div v-for="(item, index) in value" class="array-item">
             <div class="array-item-handle" :title="index"></div>
             <div class="array-item-content">
@@ -199,7 +207,7 @@ Vue.component("object-vue", ObjectVue);
             </div>
             <v-btn color="secondary" v-if="editing" @click="deleteItem(item, index)">Delete</v-btn>
         </div>    
-    </div>
+    </draggable>
     <v-btn color="primary" v-if="editing" @click="addItem">Add</v-btn>
 </div>`,
     beforeCreate: function (this: any) {
