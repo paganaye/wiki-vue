@@ -4,12 +4,12 @@ var Vue = Vue1.default;
 
 import Vuetify from 'vuetify';
 import * as AuthVue from "./auth-vue";
-import * as WikiVue from "./wiki-vue";
+import * as WikiPage from "./wiki-page";
 
 Vue.use(Vuetify);
 Vue.use
 // this console log avoids the tree shaking
-console.log(AuthVue, WikiVue);
+console.log(AuthVue, WikiPage);
 
 const env = {
     currentDocument: getCurrentDocument(),
@@ -56,7 +56,7 @@ const app = new Vue({
         <v-content>
             <v-container fluid fill-height>
                 <v-layout justify-center align-center>
-                    <wiki-vue :document="currentDocument">
+                    <wiki-page :document="currentDocument">
                     </wiki-vue>
                 </v-layout>
             </v-container>
