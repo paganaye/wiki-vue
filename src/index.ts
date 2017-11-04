@@ -56,8 +56,7 @@ const app = new Vue({
         <v-content>
             <v-container fluid fill-height>
                 <v-layout justify-center align-center>
-                    <wiki-page :document="currentDocument">
-                    </wiki-vue>
+                    <wiki-page :document="currentDocument" />
                 </v-layout>
             </v-container>
         </v-content>

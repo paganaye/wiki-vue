@@ -65,11 +65,7 @@ interface ArraySchema extends Schema {
         console.log("this", this);
         console.log("$refs", this.$refs);
         var list = this.$refs.list;
-        if (list) {
-            //Sortable.create(list, {
-            //    handle: ".array-item-handle"
-            //});
-        } else {
+        if (!list) {
             console.error("Cannot find element list", this)
         }
     }
