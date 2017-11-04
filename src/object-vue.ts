@@ -2,7 +2,7 @@ import Vue1 = require('vue');
 (Vue1.default as any) = Vue1; 
 var Vue = Vue1.default;
 import Component from "vue-class-component";
-import { WikiComponent, Property } from "./wiki-component";
+import { WikiVue, Property } from "./wiki-vue";
 
 // ObjectVue
 @Component({
@@ -54,6 +54,6 @@ import { WikiComponent, Property } from "./wiki-component";
         }
     }
 })
-export class ObjectVue extends WikiComponent {
+export class ObjectVue extends WikiVue {
 }
 Vue.component("object-vue", ObjectVue);

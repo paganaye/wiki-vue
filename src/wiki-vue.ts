@@ -4,7 +4,7 @@ var Vue = Vue1.default;
 import Component from "vue-class-component";
 
 @Component({})
-export class WikiComponent extends Vue {
+export class WikiVue extends Vue {
 }
 
 export interface Schema {

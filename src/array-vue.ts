@@ -2,7 +2,7 @@ import Vue1 = require('vue');
 (Vue1.default as any) = Vue1;
 var Vue = Vue1.default;
 import Component from "vue-class-component";
-import { WikiComponent, Property, isEditing, Schema } from "./wiki-component";
+import { WikiVue, Property, isEditing, Schema } from "./wiki-vue";
 
 
 declare function require(name: string): any;
@@ -74,7 +74,7 @@ interface ArraySchema extends Schema {
         }
     }
 })
-export class ArrayVue extends WikiComponent {
+export class ArrayVue extends WikiVue {
 
 }
 

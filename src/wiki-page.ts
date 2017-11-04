@@ -5,7 +5,7 @@ var Vue = Vue1.default;
 import Vuetify from 'vuetify';
 import * as firebase from 'firebase';
 import Component from "vue-class-component";
-import { WikiComponent, Property, vues } from "./wiki-component";
+import { WikiVue, Property, vues } from "./wiki-vue";
 import { TextFieldVue } from './text-field-vue';
 import { SelectVue } from './select-vue';
 import { ObjectVue } from './object-vue';
@@ -73,7 +73,7 @@ function isEditing(component: any): boolean {
         // Get a database reference to our posts
     }
 })
-class WikiPage extends WikiComponent {
+class WikiPage extends WikiVue {
     editing = false;
     isEditable = true;
     value = {};

@@ -2,7 +2,7 @@ import Vue1 = require('vue');
 (Vue1.default as any) = Vue1; 
 var Vue = Vue1.default;
 import Component from "vue-class-component";
-import { WikiComponent, Property, vues } from "./wiki-component";
+import { WikiVue, Property, vues } from "./wiki-vue";
 
 // DynVue
 @Component({
@@ -53,7 +53,7 @@ import { WikiComponent, Property, vues } from "./wiki-component";
     }
 })
 
-export class DynVue extends WikiComponent {
+export class DynVue extends WikiVue {
 
 }
 

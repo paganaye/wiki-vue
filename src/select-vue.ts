@@ -2,7 +2,7 @@ import Vue1 = require('vue');
 (Vue1.default as any) = Vue1; 
 var Vue = Vue1.default;
 import Component from "vue-class-component";
-import { WikiComponent, Property } from "./wiki-component";
+import { WikiVue, Property } from "./wiki-vue";
 
 // SelectVue
 @Component({
@@ -28,6 +28,6 @@ import { WikiComponent, Property } from "./wiki-component";
         }
     }
 })
-export class SelectVue extends WikiComponent {
+export class SelectVue extends WikiVue {
 }
 Vue.component("select-vue", SelectVue);

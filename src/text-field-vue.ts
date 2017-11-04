@@ -2,7 +2,7 @@ import Vue1 = require('vue');
 (Vue1.default as any) = Vue1; 
 var Vue = Vue1.default;
 import Component from "vue-class-component";
-import { WikiComponent, Property } from "./wiki-component";
+import { WikiVue, Property } from "./wiki-vue";
 
 @Component({
     props: ["property", "value"],
@@ -49,6 +49,6 @@ import { WikiComponent, Property } from "./wiki-component";
         }
     }
 })
-export class TextFieldVue extends WikiComponent {
+export class TextFieldVue extends WikiVue {
 }
 Vue.component("text-field-vue", TextFieldVue);
