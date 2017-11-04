@@ -20,15 +20,16 @@ interface ArraySchema extends Schema {
     components: {
         draggable
     },
-    //@start="drag=true" @end="drag=false"
     template: `<div>
-    <draggable :list="value" id="list" ref="list">        
+    <draggable :list="value" id="list" ref="list" :options='{handle:".array-item-handle"}'>        
         <div v-for="(item, index) in value" class="array-item">
-            <div class="array-item-handle" :title="index"></div>
+            <div v-if="editing" class="array-item-handle" :title="index"></div>
             <div class="array-item-content">
                 <dyn-vue :property="itemProperty(property, item,index)" v-model="value[index]" />
             </div>
-            <v-btn color="secondary" v-if="editing" @click="deleteItem(item, index)">Delete</v-btn>
+            <v-btn fab flat small class="delete-array-item-btn" v-if="editing" @click="deleteItem(item, index)">
+                <v-icon dark>delete</v-icon>
+            </v-btn>
         </div>    
     </draggable>
     <v-btn color="primary" v-if="editing" @click="addItem">Add</v-btn>
@@ -48,7 +49,7 @@ interface ArraySchema extends Schema {
             this.value.push({});
         }
     },
-    computed: {
+    computed: {        
         editing: function (this: any) {
             return isEditing(this);
         },
