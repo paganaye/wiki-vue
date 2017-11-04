@@ -2,7 +2,17 @@ import Vue1 = require('vue');
 (Vue1.default as any) = Vue1; 
 var Vue = Vue1.default;
 import Component from "vue-class-component";
-import { WikiVue, Property } from "./wiki-vue";
+import { WikiVue, Property, Schema, vues } from "./wiki-vue";
+
+export interface ObjectSchema extends Schema {
+    kind: "object";
+    properties: ObjectProperty[];
+}
+export interface ObjectProperty {
+    label: string;
+    name: string;
+    schema: Schema;
+}
 
 // ObjectVue
 @Component({
@@ -57,3 +67,5 @@ import { WikiVue, Property } from "./wiki-vue";
 export class ObjectVue extends WikiVue {
 }
 Vue.component("object-vue", ObjectVue);
+vues.object = 'object-vue';
+

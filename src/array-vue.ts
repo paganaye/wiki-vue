@@ -2,7 +2,7 @@ import Vue1 = require('vue');
 (Vue1.default as any) = Vue1;
 var Vue = Vue1.default;
 import Component from "vue-class-component";
-import { WikiVue, Property, isEditing, Schema } from "./wiki-vue";
+import { WikiVue, Property, isEditing, Schema, vues } from "./wiki-vue";
 
 
 declare function require(name: string): any;
@@ -79,3 +79,5 @@ export class ArrayVue extends WikiVue {
 }
 
 Vue.component("array-vue", ArrayVue);
+vues.array = 'array-vue';
+

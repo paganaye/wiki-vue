@@ -2,7 +2,11 @@ import Vue1 = require('vue');
 (Vue1.default as any) = Vue1; 
 var Vue = Vue1.default;
 import Component from "vue-class-component";
-import { WikiVue, Property } from "./wiki-vue";
+import { WikiVue, Property, Schema, vues } from "./wiki-vue";
+
+export interface TextSchema extends Schema {
+    kind: "text";
+}
 
 @Component({
     props: ["property", "value"],
@@ -51,4 +55,7 @@ import { WikiVue, Property } from "./wiki-vue";
 })
 export class TextFieldVue extends WikiVue {
 }
+
 Vue.component("text-field-vue", TextFieldVue);
+vues.string = 'text-field-vue';
+vues.number = 'text-field-vue';

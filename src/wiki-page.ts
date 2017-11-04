@@ -15,12 +15,6 @@ import { DynVue } from './dyn-vue';
 
 console.log(TextFieldVue, SelectVue, ObjectVue, ArrayVue, DynVue, vues);
 
-vues.object = 'object-vue';
-vues.array = 'array-vue';
-vues.string = 'text-field-vue';
-vues.number = 'text-field-vue';
-vues.select = 'select-vue';
-
 
 function isEditing(component: any): boolean {
     while (component) {

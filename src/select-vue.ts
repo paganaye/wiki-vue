@@ -2,7 +2,11 @@ import Vue1 = require('vue');
 (Vue1.default as any) = Vue1; 
 var Vue = Vue1.default;
 import Component from "vue-class-component";
-import { WikiVue, Property } from "./wiki-vue";
+import { WikiVue, Property, Schema, vues } from "./wiki-vue";
+
+export interface SelectSchema extends Schema {
+    kind: "select";
+}
 
 // SelectVue
 @Component({
@@ -31,3 +35,4 @@ import { WikiVue, Property } from "./wiki-vue";
 export class SelectVue extends WikiVue {
 }
 Vue.component("select-vue", SelectVue);
+vues.select = 'select-vue';
