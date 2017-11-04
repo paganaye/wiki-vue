@@ -3,8 +3,8 @@ import Vue1 = require('vue');
 var Vue = Vue1.default;
 
 import Vuetify from 'vuetify';
-import * as AuthVue from "./auth-vue";
-import * as WikiPage from "./wiki-page";
+import * as AuthVue from "./vues/auth-vue";
+import * as WikiPage from "./vues/wiki-page";
 
 Vue.use(Vuetify);
 Vue.use
