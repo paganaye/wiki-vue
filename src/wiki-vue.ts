@@ -1,8 +1,13 @@
-import * as Vue from 'vue';
+import Vue1 = require('vue'); 
+(Vue1.default as any) = Vue1; 
+var Vue = Vue1.default;
+
+//import Vue from 'vue';
 import Vuetify from 'vuetify';
 import * as firebase from 'firebase';
 //import Sortable = require('sortablejs');
 import Component from "vue-class-component";
+       
 
 interface Schema {
     kind: string;
@@ -49,6 +54,7 @@ var vues: { [key: string]: string } = {
 };
 
 // Base Component
+var x: Vue;
 
 @Component({})
 class BaseComponent extends Vue {
