@@ -32,6 +32,7 @@ function isEditing(component: any): boolean {
     <v-btn v-if="!editing" color="primary" @click="edit">Edit</v-btn>
     <v-btn v-if="editing" color="primary" @click="save">Save</v-btn>
     <v-btn v-if="editing" color="secondary" @click="cancel">Cancel</v-btn>
+    <p>{{error}}</p>
     <pre>{{jsonvalue()}}</pre>
 </div>`,
     props: ["document"],
@@ -70,17 +71,30 @@ function isEditing(component: any): boolean {
 class WikiPage extends WikiVue {
     editing = false;
     isEditable = true;
+    error = "";
     value = {};
     property = {};
 
     edit(this: any) {
+        this.error = "";
         this.editing = true
     }
     save(this: any) {
-        this.editing = false
+        this.error = "";
+        var db = firebase.database();
+        var ref = db.ref().child(this.table || "home");
+        if (this.id) ref = ref.child(this.id);
+
+        ref.set(this.value).then(() => {
+            this.editing = false
+        }).catch(e => {
+            this.error = e.toString();
+        });
+
     }
     cancel(this: any) {
         this.editing = false
+        this.error = "";
     }
     loadValueFromDb(this: any) {
         var that = this;
