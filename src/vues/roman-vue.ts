@@ -10,8 +10,8 @@ export interface RomanSchema extends Schema {
 }
 
 function romanize(num: number, clockStyle: boolean) {
-    if (!+num)
-        return NaN;
+    if (!+num || num >= 5000 || num <= 0)
+        return num;
     var digits = String(+num).split(""),
         key = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM",
             "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC",
