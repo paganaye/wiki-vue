@@ -1,6 +1,6 @@
-import Vue1 = require('vue');
-(Vue1.default as any) = Vue1;
-var Vue = Vue1.default;
+import Vue from 'vue';
+eval("vue_1.default=vue_1;");
+
 import Component from "vue-class-component";
 
 export enum EditMode {
@@ -39,7 +39,8 @@ export class WikiVue<TValue, TSchema extends Schema<TValue>> extends Vue {
     property: Property;
     schema: TSchema;
     editMode: EditMode = EditMode.ParentEditMode;
-
+    props: any;
+    
     constructor() {
         super();
     }

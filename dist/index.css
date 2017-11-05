@@ -23,18 +23,9 @@
 }
 
 .array-item-handle {
-  font-size: 35px;
-  line-height: 35px;
-  padding:15px;
   position: absolute;
-  left: -50px;
-  top: -15px;
-}
-
-.array-item-handle:before {
-  content: "\2261";
-  cursor: pointer;
-  color: gray;
+  top: 0px;
+  left: -4em;
 }
 
 .array-item {
@@ -44,7 +35,7 @@
 
 .delete-array-item-btn {
   position: absolute;
-  right: -1em;
+  right: -2em;
   top: 0px;
 }
 

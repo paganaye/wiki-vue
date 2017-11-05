@@ -1,6 +1,5 @@
-import Vue1 = require('vue');
-(Vue1.default as any) = Vue1;
-var Vue = Vue1.default;
+import Vue from 'vue';
+eval("vue_1.default=vue_1;");
 import Component from "vue-class-component";
 import { WikiVue, Property, Schema, vues } from "./wiki-vue";
 
@@ -9,10 +8,12 @@ declare function require(name: string): any;
 var draggable = require('vuedraggable');
 Vue.component("draggable", draggable.default);
 
-interface ArraySchema extends Schema<any[]> {
+interface ArraySchema<TItemType> extends Schema<TItemType[]> {
     kind: "array";
-    itemsSchema: Schema<any>;
+    itemsSchema: Schema<TItemType>;
 }
+
+//var x: Vue;
 
 // ArrayVue
 @Component({
@@ -21,9 +22,13 @@ interface ArraySchema extends Schema<any[]> {
         draggable
     },
     template: `<div>
-    <draggable :list="value" id="list" ref="list" :options='{handle:".array-item-handle"}'>        
+    <draggable :list="value" id="list" ref="list" 
+        :options='{handle:".array-item-handle", onStart:"onStart", onEnd:"onEnd"}'>        
         <div v-for="(item, index) in value" class="array-item">
-            <div v-if="editing" class="array-item-handle" :title="index"></div>
+            <v-btn fab flat small v-if="editing"
+                class="array-item-handle" :title="index">            
+                <v-icon dark>drag_handle</v-icon>
+            </v-btn>    
             <div class="array-item-content">
                 <dyn-vue :property="itemProperty(property, item,index)" v-model="value[index]" />
             </div>
@@ -51,6 +56,12 @@ interface ArraySchema extends Schema<any[]> {
         },
         addItem: function (this: any, item: any, index: number) {
             this.value.push({});
+        },
+        onStart: function () {
+            debugger;
+        },
+        onEnd: function () {
+            debugger;
         }
     },
     computed: {
@@ -58,7 +69,7 @@ interface ArraySchema extends Schema<any[]> {
             return (property: Property, item: any, index: number) => {
                 return {
                     label: '#' + index,
-                    schema: property.schema && (property.schema as ArraySchema).itemsSchema || {}
+                    schema: property.schema && (property.schema as ArraySchema<any>).itemsSchema || {}
                 };
             };
         }
@@ -72,7 +83,7 @@ interface ArraySchema extends Schema<any[]> {
         }
     }
 })
-export class ArrayVue extends WikiVue<any, ArraySchema> {
+export class ArrayVue extends WikiVue<any, ArraySchema<any>> {
 
 }
 

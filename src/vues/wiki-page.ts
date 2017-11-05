@@ -1,6 +1,6 @@
-import Vue1 = require('vue');
-(Vue1.default as any) = Vue1;
-var Vue = Vue1.default;
+import Vue from 'vue';
+eval("vue_1.default=vue_1;");
+
 
 import Vuetify from 'vuetify';
 import * as firebase from 'firebase';
