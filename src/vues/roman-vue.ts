@@ -4,7 +4,7 @@ var Vue = Vue1.default;
 import Component from "vue-class-component";
 import { WikiVue, Property, Schema, vues } from "./wiki-vue";
 
-export interface RomanSchema extends Schema {
+export interface RomanSchema extends Schema<number> {
     kind: "text";
     clockStyle: boolean;
 }
@@ -46,7 +46,7 @@ function romanize(num: number, clockStyle: boolean) {
         }
     }
 })
-export class RomanVue extends WikiVue<RomanSchema> {
+export class RomanVue extends WikiVue<number, RomanSchema> {
 }
 
 Vue.component("roman-vue", RomanVue);

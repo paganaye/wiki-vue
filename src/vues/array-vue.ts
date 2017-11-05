@@ -9,9 +9,9 @@ declare function require(name: string): any;
 var draggable = require('vuedraggable');
 Vue.component("draggable", draggable.default);
 
-interface ArraySchema extends Schema {
+interface ArraySchema extends Schema<any[]> {
     kind: "array";
-    itemsSchema: Schema;
+    itemsSchema: Schema<any>;
 }
 
 // ArrayVue
@@ -72,7 +72,7 @@ interface ArraySchema extends Schema {
         }
     }
 })
-export class ArrayVue extends WikiVue<ArraySchema> {
+export class ArrayVue extends WikiVue<any, ArraySchema> {
 
 }
 

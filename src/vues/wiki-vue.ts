@@ -19,7 +19,7 @@ export enum EditMode {
     //     }
     // },
     computed: {
-        editing: function (this: WikiVue<any>) {
+        editing: function (this: WikiVue<any, any>) {
             var component = this as any;
             while (component != null) {
                 var editMode = (component as any).editMode;
@@ -34,7 +34,8 @@ export enum EditMode {
     }
 })
 
-export class WikiVue<TSchema extends Schema> extends Vue {
+export class WikiVue<TValue, TSchema extends Schema<TValue>> extends Vue {
+    value: TValue;
     property: Property;
     schema: TSchema;
     editMode: EditMode = EditMode.ParentEditMode;
@@ -44,14 +45,15 @@ export class WikiVue<TSchema extends Schema> extends Vue {
     }
 }
 
-export interface Schema {
+export interface Schema<TValue> {
     kind: string;
+    defaultValue: TValue;
 }
 
 export interface Property {
     path: string;
     label: string;
-    schema: Schema;
+    schema: Schema<any>;
 }
 
 export var vues: { [key: string]: string } = {};

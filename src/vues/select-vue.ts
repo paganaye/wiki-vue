@@ -4,7 +4,7 @@ var Vue = Vue1.default;
 import Component from "vue-class-component";
 import { WikiVue, Property, Schema, vues } from "./wiki-vue";
 
-export interface SelectSchema extends Schema {
+export interface SelectSchema extends Schema<string> {
     kind: "select";
 }
 
@@ -36,7 +36,7 @@ export interface SelectSchema extends Schema {
         }
     }
 })
-export class SelectVue extends WikiVue<SelectSchema> {
+export class SelectVue extends WikiVue<string, SelectSchema> {
 }
 Vue.component("select-vue", SelectVue);
 vues.select = 'select-vue';

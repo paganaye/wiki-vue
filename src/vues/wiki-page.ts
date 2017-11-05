@@ -18,9 +18,9 @@ console.log(TextFieldVue, SelectVue, ObjectVue, ArrayVue,
     DynVue, vues, RomanVue);
 
 
-class WikiPageSchema implements Schema {
+class WikiPageSchema implements Schema<any> {
     kind: "page";
-
+    defaultValue: any;    
 }
 
 // WikiVue
@@ -76,7 +76,7 @@ class WikiPageSchema implements Schema {
     },
     
 })
-class WikiPage extends WikiVue<WikiPageSchema> {
+class WikiPage extends WikiVue<any, WikiPageSchema> {
     error = "";
     value: object = null;
     debug = false;

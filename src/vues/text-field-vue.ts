@@ -4,7 +4,7 @@ var Vue = Vue1.default;
 import Component from "vue-class-component";
 import { WikiVue, Property, Schema, vues } from "./wiki-vue";
 
-export interface TextFieldSchema extends Schema {
+export interface TextFieldSchema extends Schema<any> {
     kind: "text";
 }
 
@@ -52,7 +52,7 @@ export interface TextFieldSchema extends Schema {
         }
     }
 })
-export class TextFieldVue extends WikiVue<TextFieldSchema> {
+export class TextFieldVue extends WikiVue<any, TextFieldSchema> {
 }
 
 Vue.component("text-field-vue", TextFieldVue);
