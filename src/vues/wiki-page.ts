@@ -107,7 +107,9 @@ class WikiPage extends WikiVue {
         // Attach an asynchronous callback to read the data at our posts reference
         ref.on("value", function (snapshot) {
             var val = snapshot.val();
-            Vue.set(that, "value", val);
+            if (val !== null) {
+                Vue.set(that, "value", val);
+            }
             console.log("firebase value", JSON.stringify(that.value));
 
         }, function (errorObject: any) {

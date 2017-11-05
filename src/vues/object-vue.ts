@@ -1,5 +1,5 @@
-import Vue1 = require('vue'); 
-(Vue1.default as any) = Vue1; 
+import Vue1 = require('vue');
+(Vue1.default as any) = Vue1;
 var Vue = Vue1.default;
 import Component from "vue-class-component";
 import { WikiVue, Property, Schema, vues } from "./wiki-vue";
@@ -25,11 +25,33 @@ export interface ObjectProperty {
     </div>
 </div>`,
     beforeCreate: function (this: any) {
+        console.log("object-vue", "beforeCreate", "value", this.value);
+        
+        if (!this.value) {
+            this.$emit('input', {})
+        }
     },
     created: function (this: any) {
+        console.log("object-vue", "created", "value", this.value);
+        if (!this.value) {
+            this.$emit('input', {})
+        }
+    },
+    mounted: function (this: any) {
+        console.log("object-vue", "mounted", "value", this.value);
+        if (!this.value) {
+            this.$emit('input', {})
+        }
+    },
+    activated: function (this: any) {
+        console.log("object-vue", "activated", "value", this.value);
+        if (!this.value) {
+            this.$emit('input', {})
+        }
     },
     beforeUpdate: function (this: any) {
-        console.log("object-vue", "beforeUpdate");
+        console.log("object-vue", "beforeUpdate", "value", this.value);
+
     },
     methods: {
         properties: function (this: any) {
