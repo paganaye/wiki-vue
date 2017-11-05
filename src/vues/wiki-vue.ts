@@ -9,7 +9,6 @@ export enum EditMode {
     Editing
 }
 
-
 @Component({
     // watch: {
     //     schema: function (this: any) {
@@ -34,6 +33,7 @@ export enum EditMode {
         }
     }
 })
+
 export class WikiVue<TSchema extends Schema> extends Vue {
     property: Property;
     schema: TSchema;
@@ -47,6 +47,7 @@ export class WikiVue<TSchema extends Schema> extends Vue {
 export interface Schema {
     kind: string;
 }
+
 export interface Property {
     path: string;
     label: string;
@@ -54,4 +55,3 @@ export interface Property {
 }
 
 export var vues: { [key: string]: string } = {};
-

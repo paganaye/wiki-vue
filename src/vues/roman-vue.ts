@@ -41,8 +41,8 @@ function romanize(num: number, clockStyle: boolean) {
                 this.$emit('input', val)
             }
         },
-        romanValue: function (this: any) {
-            return romanize(this.value, this.schema && this.schema.clockStyle);
+        romanValue: function (this: RomanVue) {
+            return romanize((this as any).value, this.schema && this.schema.clockStyle);
         }
     }
 })
