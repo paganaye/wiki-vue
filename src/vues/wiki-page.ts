@@ -27,13 +27,13 @@ function isEditing(component: any): boolean {
 // WikiVue
 @Component({
     template: `<div>
-    <p>Loading table:'{{table}}'</p>
-    <dyn-vue :property="property" v-model="this.value" debug="true" />  
-    <v-btn v-if="!editing" color="primary" @click="edit">Edit</v-btn>
+    <p v-if="loading">Loading {{table}} {{id}}</p>
+    <dyn-vue v-if="!loading" :property="property" v-model="this.value" :debug="debug" />  
+    <v-btn v-if="!loading && !editing" color="primary" @click="edit">Edit</v-btn>
     <v-btn v-if="editing" color="primary" @click="save">Save</v-btn>
     <v-btn v-if="editing" color="secondary" @click="cancel">Cancel</v-btn>
     <p>{{error}}</p>
-    <pre>{{jsonvalue()}}</pre>
+    <pre v-if="debug">{{jsonvalue()}}</pre>
 </div>`,
     props: ["document"],
     computed: {
@@ -49,10 +49,18 @@ function isEditing(component: any): boolean {
         firstSpacePos: function (this: any) {
             var pos = (this.document as String).indexOf(' ');
             return pos;
+        },
+        loading: function (this: any) {
+            console.log("calculating loading", this.value == null, this.schema == null, this.value, this.schema)
+            return this.value == null || this.schema == null;
+        },
+        property: function (this: any): Property {
+            return {
+                label: this.table + " " + this.id,
+                path: "",
+                schema: this.schema
+            }
         }
-    },
-    beforeUpdate: function (this: any) {
-        console.log("wiki-vue", "beforeUpdate");
     },
     watch: {
         document: function (this: any) {
@@ -72,8 +80,9 @@ class WikiPage extends WikiVue {
     editing = false;
     isEditable = true;
     error = "";
-    value = {};
-    property = {};
+    value: object = null;
+    schema: object = null;
+    debug = false;
 
     edit(this: any) {
         this.error = "";
@@ -98,7 +107,7 @@ class WikiPage extends WikiVue {
     }
     loadValueFromDb(this: any) {
         var that = this;
-        var property = this.$data.property;
+        //var property = this.$data.property;
         var db = firebase.database();
         var ref = db.ref().child(this.table || "home");
         if (this.id) ref = ref.child(this.id);
@@ -108,16 +117,15 @@ class WikiPage extends WikiVue {
         ref.on("value", function (snapshot) {
             var val = snapshot.val();
             if (val === null) val = {};
-            Vue.set(that, "value", val);
+            that.value = val;
             console.log("firebase value", JSON.stringify(that.value));
-
         }, function (errorObject: any) {
             console.log("The read failed: " + errorObject.code);
         });
     }
     loadSchemaFromDb(this: any) {
         var that = this;
-        var property = that.property;
+        //var property = that.property;
         var db = firebase.database();
         var ref = db.ref().child("schema");
         if (this.id) ref = ref.child(this.table);
@@ -126,8 +134,8 @@ class WikiPage extends WikiVue {
         // Attach an asynchronous callback to read the data at our posts reference
         ref.on("value", function (snapshot) {
             var val = snapshot.val();
-            Vue.set(that.property, "schema", val)
-            console.log("firebase schema", JSON.stringify(property.schema));
+            that.schema = val;
+            console.log("firebase schema", JSON.stringify(that.schema));
         }, function (errorObject: any) {
             console.log("The schema read failed: " + errorObject.code);
         });
