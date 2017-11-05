@@ -82,7 +82,6 @@ class WikiPage extends WikiVue<WikiPageSchema> {
     debug = false;
 
     edit(this: WikiPage) {
-        debugger;
         this.error = "";
         this.editMode = EditMode.Editing;
     }

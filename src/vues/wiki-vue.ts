@@ -2,6 +2,7 @@ import Vue1 = require('vue');
 (Vue1.default as any) = Vue1;
 var Vue = Vue1.default;
 import Component from "vue-class-component";
+import { Vue } from 'vue/types/vue';
 
 export enum EditMode {
     ParentEditMode,
@@ -20,10 +21,16 @@ export enum EditMode {
     // },
     computed: {
         editing: function (this: WikiVue<any>) {
-            if (this.editMode == EditMode.ParentEditMode) {
-                var component = (this as any).$parent;
-                return (component ? component.editing : false);
-            } else return this.editMode == EditMode.Editing;
+            var component = this as Vue;
+            while (component != null) {
+                var editMode = (component as any).editMode;
+                switch (editMode) {
+                    case EditMode.Editing: return true;
+                    case EditMode.Viewing: return false;
+                }
+                component = component.$parent;
+            }
+            return false;
         }
     }
 })
