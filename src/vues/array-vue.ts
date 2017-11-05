@@ -2,7 +2,7 @@ import Vue1 = require('vue');
 (Vue1.default as any) = Vue1;
 var Vue = Vue1.default;
 import Component from "vue-class-component";
-import { WikiVue, Property, isEditing, Schema, vues } from "./wiki-vue";
+import { WikiVue, Property, Schema, vues } from "./wiki-vue";
 
 
 declare function require(name: string): any;
@@ -54,9 +54,6 @@ interface ArraySchema extends Schema {
         }
     },
     computed: {
-        editing: function (this: any) {
-            return isEditing(this);
-        },
         itemProperty: function (this: any) {
             return (property: Property, item: any, index: number) => {
                 return {
@@ -75,7 +72,7 @@ interface ArraySchema extends Schema {
         }
     }
 })
-export class ArrayVue extends WikiVue {
+export class ArrayVue extends WikiVue<ArraySchema> {
 
 }
 

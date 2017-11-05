@@ -2,7 +2,7 @@ import Vue1 = require('vue');
 (Vue1.default as any) = Vue1;
 var Vue = Vue1.default;
 import Component from "vue-class-component";
-import { WikiVue, Property, Schema, vues, isEditing } from "./wiki-vue";
+import { WikiVue, Property, Schema, vues } from "./wiki-vue";
 
 export interface SelectSchema extends Schema {
     kind: "select";
@@ -24,9 +24,6 @@ export interface SelectSchema extends Schema {
         console.log("select-vue", "beforeUpdate");
     },
     computed: {
-        editing: function (this: any) {
-            return isEditing(this);
-        },
         dynvalue: {
             get() { return this.value; },
             set(val: any) {
@@ -39,7 +36,7 @@ export interface SelectSchema extends Schema {
         }
     }
 })
-export class SelectVue extends WikiVue {
+export class SelectVue extends WikiVue<SelectSchema> {
 }
 Vue.component("select-vue", SelectVue);
 vues.select = 'select-vue';

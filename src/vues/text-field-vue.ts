@@ -2,9 +2,9 @@ import Vue1 = require('vue');
 (Vue1.default as any) = Vue1; 
 var Vue = Vue1.default;
 import Component from "vue-class-component";
-import { WikiVue, Property, Schema, vues, isEditing } from "./wiki-vue";
+import { WikiVue, Property, Schema, vues } from "./wiki-vue";
 
-export interface TextSchema extends Schema {
+export interface TextFieldSchema extends Schema {
     kind: "text";
 }
 
@@ -19,10 +19,7 @@ export interface TextSchema extends Schema {
     beforeUpdate: function (this: any) {
         console.log("text-field-vue", "beforeUpdate");
     },
-    computed: {
-        editing: function (this: any) {
-            return isEditing(this);
-        },        
+    computed: {      
         inputType: function (this: any) {
             var property = (this.property as Property);
             var kind = property.schema && property.schema.kind;
@@ -55,7 +52,7 @@ export interface TextSchema extends Schema {
         }
     }
 })
-export class TextFieldVue extends WikiVue {
+export class TextFieldVue extends WikiVue<TextFieldSchema> {
 }
 
 Vue.component("text-field-vue", TextFieldVue);

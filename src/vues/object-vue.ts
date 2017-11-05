@@ -56,7 +56,7 @@ export interface ObjectProperty {
         }
     }
 })
-export class ObjectVue extends WikiVue {
+export class ObjectVue extends WikiVue<ObjectSchema> {
 }
 Vue.component("object-vue", ObjectVue);
 vues.object = 'object-vue';

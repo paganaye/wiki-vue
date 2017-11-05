@@ -5,7 +5,7 @@ var Vue = Vue1.default;
 import Vuetify from 'vuetify';
 import * as firebase from 'firebase';
 import Component from "vue-class-component";
-import { WikiVue, Property, vues } from "./wiki-vue";
+import { WikiVue, Property, vues, Schema, EditMode } from "./wiki-vue";
 import { TextFieldVue } from './text-field-vue';
 import { SelectVue } from './select-vue';
 import { ObjectVue } from './object-vue';
@@ -14,16 +14,13 @@ import { DynVue } from './dyn-vue';
 import { RomanVue } from './roman-vue';
 
 
-console.log(TextFieldVue, SelectVue, ObjectVue, ArrayVue, 
+console.log(TextFieldVue, SelectVue, ObjectVue, ArrayVue,
     DynVue, vues, RomanVue);
 
 
-function isEditing(component: any): boolean {
-    while (component) {
-        if ((component as any).isEditable) return (component as any).editing;
-        component = component.$parent;
-    }
-    return false;
+class WikiPageSchema implements Schema {
+    kind: "page";
+
 }
 
 // WikiVue
@@ -76,19 +73,18 @@ function isEditing(component: any): boolean {
         this.loadSchemaFromDb();
         this.loadValueFromDb();
         // Get a database reference to our posts
-    }
+    },
+    
 })
-class WikiPage extends WikiVue {
-    editing = false;
-    isEditable = true;
+class WikiPage extends WikiVue<WikiPageSchema> {
     error = "";
     value: object = null;
-    schema: object = null;
     debug = false;
 
-    edit(this: any) {
+    edit(this: WikiPage) {
+        debugger;
         this.error = "";
-        this.editing = true
+        this.editMode = EditMode.Editing;
     }
     save(this: any) {
         this.error = "";
@@ -97,14 +93,14 @@ class WikiPage extends WikiVue {
         if (this.id) ref = ref.child(this.id);
 
         ref.set(this.value).then(() => {
-            this.editing = false
+            this.editMode = EditMode.Viewing;
         }).catch(e => {
             this.error = e.toString();
         });
 
     }
-    cancel(this: any) {
-        this.editing = false
+    cancel(this: WikiPage) {
+        this.editMode = EditMode.Viewing;
         this.error = "";
     }
     loadValueFromDb(this: any) {
