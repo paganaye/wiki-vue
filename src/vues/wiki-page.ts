@@ -10,12 +10,13 @@ import { TextFieldVue } from './text-field-vue';
 import { SelectVue } from './select-vue';
 import { ObjectVue } from './object-vue';
 import { ArrayVue } from './array-vue';
+import { TableVue } from './table-vue';
 import { DynVue } from './dyn-vue';
 import { RomanVue } from './roman-vue';
 
 
 console.log(TextFieldVue, SelectVue, ObjectVue, ArrayVue,
-    DynVue, vues, RomanVue);
+    DynVue, vues, RomanVue, TableVue);
 
 
 class WikiPageSchema implements Schema<any> {
