@@ -13,8 +13,6 @@ interface ArraySchema<TItemType> extends Schema<TItemType[]> {
     itemsSchema: Schema<TItemType>;
 }
 
-//var x: Vue;
-
 // ArrayVue
 @Component({
     props: ["property", "value"],

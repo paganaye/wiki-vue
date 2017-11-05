@@ -9,19 +9,6 @@ export interface RomanSchema extends Schema<number> {
     clockStyle: boolean;
 }
 
-function romanize(num: number, clockStyle: boolean) {
-    if (!+num || num >= 5000 || num <= 0)
-        return num;
-    var digits = String(+num).split(""),
-        key = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM",
-            "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC",
-            "", "I", "II", "III", clockStyle ? "IIII" : "IV", "V", "VI", "VII", "VIII", "IX"],
-        roman = "",
-        i = 3;
-    while (i--)
-        roman = (key[+digits.pop() + (i * 10)] || "") + roman;
-    return Array(+digits.join("") + 1).join("M") + roman;
-}
 
 @Component({
     props: ["property", "value"],
@@ -42,12 +29,25 @@ function romanize(num: number, clockStyle: boolean) {
             }
         },
         romanValue: function (this: RomanVue) {
-
-            return romanize(this.value, this.property.schema.clockStyle);
+            return this.romanize(this.value, this.property.schema.clockStyle);
         }
     }
 })
 export class RomanVue extends WikiVue<number, RomanSchema> {
+
+    romanize(num: number, clockStyle: boolean): string {
+        if (!+num || num >= 5000 || num <= 0)
+            return num.toString();
+        var digits = String(+num).split(""),
+            key = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM",
+                "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC",
+                "", "I", "II", "III", clockStyle ? "IIII" : "IV", "V", "VI", "VII", "VIII", "IX"],
+            roman = "",
+            i = 3;
+        while (i--)
+            roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+        return Array(+digits.join("") + 1).join("M") + roman;
+    }
 }
 
 Vue.component("roman-vue", RomanVue);
