@@ -109,7 +109,8 @@ interface TableSchema<TItemType> extends Schema<TItemType[]> {
             debugger;
         },
         okClicked: function (this: TableVue) {
-            this.value[this.editedPropertyIndex] = this.editedValue;
+            Vue.set(this.value, this.editedPropertyIndex, this.editedValue);
+            //this.$emit("input", this.value);
             this.dialog = false;
         }
     },
