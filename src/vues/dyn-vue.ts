@@ -49,7 +49,7 @@ export class DynVueSchema implements Schema<any> {
             console.log("this.property", JSON.stringify(this.property));
             console.log("this.value", JSON.stringify(this.value));
 
-            var property: Property = this.property;
+            var property: Property<any, any> = this.property;
             var schema = this.getSchema;
             var result = vues[schema.kind] || "text-field-vue";
             return result;

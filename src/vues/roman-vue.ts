@@ -42,7 +42,8 @@ function romanize(num: number, clockStyle: boolean) {
             }
         },
         romanValue: function (this: RomanVue) {
-            return romanize((this as any).value, this.schema && this.schema.clockStyle);
+
+            return romanize(this.value, this.property.schema.clockStyle);
         }
     }
 })

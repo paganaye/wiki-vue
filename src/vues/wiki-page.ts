@@ -20,7 +20,7 @@ console.log(TextFieldVue, SelectVue, ObjectVue, ArrayVue,
 
 class WikiPageSchema implements Schema<any> {
     kind: "page";
-    defaultValue: any;    
+    defaultValue: any;
 }
 
 // WikiVue
@@ -53,7 +53,7 @@ class WikiPageSchema implements Schema<any> {
             console.log("calculating loading", this.value == null, this.schema == null, this.value, this.schema)
             return this.value == null || this.schema == null;
         },
-        property: function (this: any): Property {
+        property: function (this: any): Property<any, any> {
             return {
                 label: this.table + " " + this.id,
                 path: "",
@@ -74,7 +74,7 @@ class WikiPageSchema implements Schema<any> {
         this.loadValueFromDb();
         // Get a database reference to our posts
     },
-    
+
 })
 class WikiPage extends WikiVue<any, WikiPageSchema> {
     error = "";

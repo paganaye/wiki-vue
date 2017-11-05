@@ -36,11 +36,10 @@ export enum EditMode {
 
 export class WikiVue<TValue, TSchema extends Schema<TValue>> extends Vue {
     value: TValue;
-    property: Property;
-    schema: TSchema;
+    property: Property<TValue, TSchema>;
     editMode: EditMode = EditMode.ParentEditMode;
     props: any;
-    
+
     constructor() {
         super();
     }
@@ -51,10 +50,10 @@ export interface Schema<TValue> {
     defaultValue: TValue;
 }
 
-export interface Property {
+export interface Property<TValue, TSchema extends Schema<TValue>> {
     path: string;
     label: string;
-    schema: Schema<any>;
+    schema: TSchema;
 }
 
 export var vues: { [key: string]: string } = {};

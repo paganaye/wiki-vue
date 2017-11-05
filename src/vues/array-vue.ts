@@ -66,7 +66,7 @@ interface ArraySchema<TItemType> extends Schema<TItemType[]> {
     },
     computed: {
         itemProperty: function (this: any) {
-            return (property: Property, item: any, index: number) => {
+            return (property: Property<any, any>, item: any, index: number) => {
                 return {
                     label: '#' + index,
                     schema: property.schema && (property.schema as ArraySchema<any>).itemsSchema || {}

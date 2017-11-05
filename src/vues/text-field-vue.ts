@@ -21,7 +21,7 @@ export interface TextFieldSchema extends Schema<any> {
     },
     computed: {      
         inputType: function (this: any) {
-            var property = (this.property as Property);
+            var property = (this.property as Property<any,any>);
             var kind = property.schema && property.schema.kind;
             switch (kind) {
                 case 'number':

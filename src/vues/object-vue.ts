@@ -6,10 +6,10 @@ import { WikiVue, Property, Schema, vues } from "./wiki-vue";
 
 export interface ObjectSchema extends Schema<any> {
     kind: "object";
-    properties: ObjectProperty[];
+    members: ObjectMember[];
 }
 
-export interface ObjectProperty {
+export interface ObjectMember {
     label: string;
     name: string;
     schema: Schema<any>;
@@ -20,9 +20,9 @@ export interface ObjectProperty {
     props: ["property", "value", "debug"],
     template: `<div>
     <p>{{property.label}}</p>
-    <div v-for="prop in properties()" v-if="property && property.schema && property.schema.properties">
+    <div v-for="member in members()" v-if="property && property.schema && property.schema.members">
         <dyn-vue 
-            :property="dynProperty(prop, value)" v-model="value[prop.name]" />
+            :property="dynProperty(member, value)" v-model="value[member.name]" />
     </div>
 </div>`,
     beforeCreate: function (this: any) {
@@ -36,23 +36,22 @@ export interface ObjectProperty {
         }
     },
     methods: {
-        properties: function (this: any) {
-            if (this.property && this.property.schema && this.property.schema.properties) {
-                return this.property.schema.properties;
+        members: function (this: any) {
+            if (this.property && this.property.schema && this.property.schema.members) {
+                return this.property.schema.members;
             } else return [];
         },
-        dynProperty: function (this: any, prop: any, objectValue: any) {
+        dynProperty: function (this: any, member: ObjectMember, objectValue: any) {
             if (objectValue == null) objectValue = {};
-            var itemValue = objectValue[prop.name];
+            var itemValue = objectValue[member.name];
             return {
-                schema: prop.schema,
-                label: prop.label || prop.name,
-                value: itemValue
+                schema: member.schema,
+                label: member.label || member.name
             }
         },
-        memberValue: function (this: any, prop: any, objectValue: any) {
+        memberValue: function (this: any, member: ObjectMember, objectValue: any) {
             if (objectValue == null) objectValue = {};
-            var itemValue = objectValue[prop.name];
+            var itemValue = objectValue[member.name];
             return itemValue;
         }
     }
