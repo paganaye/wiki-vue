@@ -37,9 +37,13 @@ interface ArraySchema extends Schema {
     beforeCreate: function (this: any) {
     },
     created: function (this: any) {
+        console.log("array-vue", "created", "value", this.value);
     },
     beforeUpdate: function (this: any) {
         console.log("array-vue", "beforeUpdate");
+        if (this.value == null) {
+            this.$emit('input', [])
+        }
     },
     methods: {
         deleteItem: function (this: any, item: any, index: number) {
@@ -49,7 +53,7 @@ interface ArraySchema extends Schema {
             this.value.push({});
         }
     },
-    computed: {        
+    computed: {
         editing: function (this: any) {
             return isEditing(this);
         },

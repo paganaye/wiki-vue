@@ -19,39 +19,20 @@ export interface ObjectProperty {
     props: ["property", "value", "debug"],
     template: `<div>
     <p>{{property.label}}</p>
-    <div v-for="prop in properties()" v-if="value && property && property.schema && property.schema.properties">
+    <div v-for="prop in properties()" v-if="property && property.schema && property.schema.properties">
         <dyn-vue 
             :property="dynProperty(prop, value)" v-model="value[prop.name]" />
     </div>
 </div>`,
     beforeCreate: function (this: any) {
-        console.log("object-vue", "beforeCreate", "value", this.value);
-        
-        if (!this.value) {
-            this.$emit('input', {})
-        }
+        console.log("object-vue", "beforeCreate");
     },
-    created: function (this: any) {
-        console.log("object-vue", "created", "value", this.value);
-        if (!this.value) {
-            this.$emit('input', {})
-        }
-    },
-    mounted: function (this: any) {
-        console.log("object-vue", "mounted", "value", this.value);
-        if (!this.value) {
-            this.$emit('input', {})
-        }
-    },
-    activated: function (this: any) {
-        console.log("object-vue", "activated", "value", this.value);
-        if (!this.value) {
-            this.$emit('input', {})
-        }
-    },
+
     beforeUpdate: function (this: any) {
         console.log("object-vue", "beforeUpdate", "value", this.value);
-
+        if (!this.value) {
+            this.$emit('input', {})
+        }
     },
     methods: {
         properties: function (this: any) {
@@ -62,17 +43,6 @@ export interface ObjectProperty {
         dynProperty: function (this: any, prop: any, objectValue: any) {
             if (objectValue == null) objectValue = {};
             var itemValue = objectValue[prop.name];
-            if (itemValue == null) {
-                switch (prop.schema.kind) {
-                    case "array":
-                        itemValue = [];
-                        break;
-                    case "object":
-                        itemValue = {};
-                        break;
-                }
-                objectValue[prop.name] = itemValue;
-            }
             return {
                 schema: prop.schema,
                 label: prop.label || prop.name,
