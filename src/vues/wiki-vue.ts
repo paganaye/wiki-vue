@@ -2,13 +2,13 @@ import Vue1 = require('vue');
 (Vue1.default as any) = Vue1;
 var Vue = Vue1.default;
 import Component from "vue-class-component";
-import { Vue } from 'vue/types/vue';
 
 export enum EditMode {
     ParentEditMode,
     Viewing,
     Editing
 }
+
 
 @Component({
     // watch: {
@@ -21,7 +21,7 @@ export enum EditMode {
     // },
     computed: {
         editing: function (this: WikiVue<any>) {
-            var component = this as Vue;
+            var component = this as any;
             while (component != null) {
                 var editMode = (component as any).editMode;
                 switch (editMode) {
