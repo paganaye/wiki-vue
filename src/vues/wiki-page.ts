@@ -11,9 +11,11 @@ import { SelectVue } from './select-vue';
 import { ObjectVue } from './object-vue';
 import { ArrayVue } from './array-vue';
 import { DynVue } from './dyn-vue';
+import { RomanVue } from './roman-vue';
 
 
-console.log(TextFieldVue, SelectVue, ObjectVue, ArrayVue, DynVue, vues);
+console.log(TextFieldVue, SelectVue, ObjectVue, ArrayVue, 
+    DynVue, vues, RomanVue);
 
 
 function isEditing(component: any): boolean {

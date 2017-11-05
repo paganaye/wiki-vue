@@ -50,8 +50,6 @@ export interface TextSchema extends Schema {
                 return this.value
             },
             set(val: string) {
-                console.log("he")
-                this.lazyValue = val
                 this.$emit('input', val)
             }
         }

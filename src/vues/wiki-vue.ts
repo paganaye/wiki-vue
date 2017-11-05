@@ -14,7 +14,6 @@ export interface Property {
     label: string;
     schema: Schema;
 }
-console.log("he");
 
 export var vues: { [key: string]: string } = {};
 
