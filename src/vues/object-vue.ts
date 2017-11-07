@@ -10,8 +10,8 @@ export interface ObjectSchema extends Schema<any> {
 }
 
 export interface ObjectMember {
-    label: string;
     name: string;
+    label?: string;
     schema: Schema<any>;
 }
 

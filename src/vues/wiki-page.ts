@@ -6,22 +6,22 @@ import Vuetify from 'vuetify';
 import * as firebase from 'firebase';
 import Component from "vue-class-component";
 import { WikiVue, Property, vues, Schema, EditMode } from "./wiki-vue";
-import { TextFieldVue } from './text-field-vue';
-import { SelectVue } from './select-vue';
-import { ObjectVue } from './object-vue';
-import { ArrayVue } from './array-vue';
+import { TextFieldVue, StringSchema, NumberSchema } from './text-field-vue';
+import { SelectVue, SelectSchema } from './select-vue';
+import { ObjectVue, ObjectSchema, ObjectMember } from './object-vue';
+import { ArrayVue, ArraySchema } from './array-vue';
 import { TableVue } from './table-vue';
 import { DynVue } from './dyn-vue';
+import { SwitchVue, SwitchSchema } from './switch-vue';
 import { RomanVue } from './roman-vue';
 
 
 console.log(TextFieldVue, SelectVue, ObjectVue, ArrayVue,
-    DynVue, vues, RomanVue, TableVue);
+    DynVue, vues, RomanVue, TableVue, SwitchVue);
 
 
 class WikiPageSchema implements Schema<any> {
     kind: "page";
-    defaultValue: any;
 }
 
 // WikiVue
@@ -79,9 +79,43 @@ class WikiPageSchema implements Schema<any> {
 })
 class WikiPage extends WikiVue<any, WikiPageSchema> {
     error = "";
-    value: object = null;
     debug = false;
+    value: object = null;
+    schema: Schema<any> = { kind: "object" };
+    // computed
+    table: string;
+    id: string;
 
+
+    static metaSchema: ObjectSchema = {
+        kind: "object",
+        members: [
+            {
+                name: "kind",
+                label: "kind",
+                schema: {
+                    kind: "switch",
+                    kinds: [
+                        { kind: "string" },
+                        { kind: "number" },
+                        { kind: "email" },
+                        { kind: "object" },
+                        { kind: "array" },
+                        { kind: "select", },
+                        { kinds: "switch" }
+                    ]
+                } as SwitchSchema
+            },
+            {
+                name: "label",
+                label: ", label",
+                schema: {
+                    kind: "string"
+                } as StringSchema
+            }
+        ]
+
+    }
     edit(this: WikiPage) {
         this.error = "";
         this.editMode = EditMode.Editing;
@@ -121,22 +155,31 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
             console.log("The read failed: " + errorObject.code);
         });
     }
-    loadSchemaFromDb(this: any) {
+    loadSchemaFromDb(this: WikiPage) {
         var that = this;
-        //var property = that.property;
-        var db = firebase.database();
-        var ref = db.ref().child("schema");
-        if (this.id) ref = ref.child(this.table);
+        switch (this.table) {
+            case "schema":
+                that.schema = WikiPage.metaSchema;
+                break;
+            default:
+                //var property = that.property;
+                var db = firebase.database();
+                var ref = db.ref().child("schema");
+                if (this.id) ref = ref.child(this.table);
 
-        console.log("db", db, "ref", ref);
-        // Attach an asynchronous callback to read the data at our posts reference
-        ref.on("value", function (snapshot) {
-            var val = snapshot.val();
-            that.schema = val;
-            console.log("firebase schema", JSON.stringify(that.schema));
-        }, function (errorObject: any) {
-            console.log("The schema read failed: " + errorObject.code);
-        });
+                console.log("db", db, "ref", ref);
+                // Attach an asynchronous callback to read the data at our posts reference
+                ref.on("value", function (snapshot) {
+                    var val = snapshot.val();
+                    if (val == null) {
+                        val = {};
+                    }
+                    that.schema = val;
+                    console.log("firebase schema", JSON.stringify(that.schema));
+                }, function (errorObject: any) {
+                    console.log("The schema read failed: " + errorObject.code);
+                });
+        }
     }
     jsonvalue(): string {
         return "VALUE: " + JSON.stringify(this.value);
@@ -144,3 +187,4 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
 }
 
 Vue.component("wiki-page", WikiPage);
+

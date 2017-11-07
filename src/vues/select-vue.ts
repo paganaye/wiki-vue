@@ -6,6 +6,7 @@ import { WikiVue, Property, Schema, vues } from "./wiki-vue";
 
 export interface SelectSchema extends Schema<string> {
     kind: "select";
+    list: any;
 }
 
 // SelectVue
@@ -14,7 +15,9 @@ export interface SelectSchema extends Schema<string> {
     template: `<div>
     <v-select v-if="editing"
         :label="property.label || (property.schema && (property.schema.label || property.schema.name)) || '???'"
-        v-model="dynvalue" :items="items"></v-select>
+        v-model="dynvalue" :items="items"
+        item-text="text"
+        item-value="value"></v-select>
     <v-text-field v-else
         readonly
         :label="property.label || (property.schema && (property.schema.label || property.schema.name)) || '???'"
@@ -25,12 +28,20 @@ export interface SelectSchema extends Schema<string> {
     },
     computed: {
         dynvalue: {
-            get() { return this.value; },
+            get() {
+                if (typeof this.value === "object" && this.value.text) {
+                    return this.value.text;
+                }
+                return this.value;
+            },
             set(val: any) {
+                if (typeof val === "object" && val.text) {
+                    val = val.text;
+                }
                 this.$emit('input', val)
             }
         },
-        items: function (this: any) {
+        items: function (this: SelectVue) {
             console.log("property", this.property, "value", this.value);
             return this.property.schema.list;
         }

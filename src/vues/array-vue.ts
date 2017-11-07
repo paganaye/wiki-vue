@@ -8,7 +8,7 @@ declare function require(name: string): any;
 var draggable = require('vuedraggable');
 Vue.component("draggable", draggable.default);
 
-interface ArraySchema<TItemType> extends Schema<TItemType[]> {
+export interface ArraySchema<TItemType> extends Schema<TItemType[]> {
     kind: "array";
     itemsSchema: Schema<TItemType>;
 }
@@ -54,12 +54,6 @@ interface ArraySchema<TItemType> extends Schema<TItemType[]> {
         },
         addItem: function (this: any, item: any, index: number) {
             this.value.push({});
-        },
-        onStart: function () {
-            debugger;
-        },
-        onEnd: function () {
-            debugger;
         }
     },
     computed: {

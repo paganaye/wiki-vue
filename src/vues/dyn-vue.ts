@@ -6,7 +6,7 @@ import { WikiVue, Property, vues, Schema } from "./wiki-vue";
 
 export class DynVueSchema implements Schema<any> {
     kind: "string";
-    defaultValue: any;
+    defaultValue?: any;
 }
 
 // DynVue

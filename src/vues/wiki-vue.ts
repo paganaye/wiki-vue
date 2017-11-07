@@ -47,7 +47,7 @@ export class WikiVue<TValue, TSchema extends Schema<TValue>> extends Vue {
 
 export interface Schema<TValue> {
     kind: string;
-    defaultValue: TValue;
+    defaultValue?: TValue;
 }
 
 export interface Property<TValue, TSchema extends Schema<TValue>> {

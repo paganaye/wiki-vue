@@ -102,12 +102,6 @@ interface TableSchema<TItemType> extends Schema<TItemType[]> {
             }
             this.dialog = true;
         },
-        onStart: function () {
-            debugger;
-        },
-        onEnd: function () {
-            debugger;
-        },
         okClicked: function (this: TableVue) {
             Vue.set(this.value, this.editedPropertyIndex, this.editedValue);
             //this.$emit("input", this.value);

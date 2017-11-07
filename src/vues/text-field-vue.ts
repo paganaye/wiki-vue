@@ -1,11 +1,17 @@
-import Vue from 'vue'; 
-eval("vue_1.default=vue_1;"); 
+import Vue from 'vue';
+eval("vue_1.default=vue_1;");
 
 import Component from "vue-class-component";
 import { WikiVue, Property, Schema, vues } from "./wiki-vue";
 
 export interface TextFieldSchema extends Schema<any> {
     kind: "text";
+}
+export interface StringSchema extends Schema<string> {
+    kind: "string";    
+}
+export interface NumberSchema extends Schema<number> {
+    kind: "number";
 }
 
 @Component({
@@ -19,9 +25,9 @@ export interface TextFieldSchema extends Schema<any> {
     beforeUpdate: function (this: any) {
         console.log("text-field-vue", "beforeUpdate");
     },
-    computed: {      
+    computed: {
         inputType: function (this: any) {
-            var property = (this.property as Property<any,any>);
+            var property = (this.property as Property<any, any>);
             var kind = property.schema && property.schema.kind;
             switch (kind) {
                 case 'number':
@@ -44,7 +50,12 @@ export interface TextFieldSchema extends Schema<any> {
         },
         inputValue: {
             get(): string {
-                return this.value
+                var val = this.value;
+                switch (typeof val) {
+                    case "object":
+                        val = JSON.stringify(val);
+                }
+                return val;
             },
             set(val: string) {
                 this.$emit('input', val)
