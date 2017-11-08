@@ -77,6 +77,7 @@ class WikiPageSchema implements Schema<any> {
     },
 
 })
+
 class WikiPage extends WikiVue<any, WikiPageSchema> {
     error = "";
     debug = false;
@@ -86,36 +87,74 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
     table: string;
     id: string;
 
+    static schemaKindSchema: SwitchSchema = {
+        kind: "switch",
+        kinds: []
+    } as SwitchSchema;
 
-    static metaSchema: ObjectSchema = {
+    static schemaMetaSchema: ObjectSchema = {
+        kind: "object",
+        members: [{
+            name: "kind",
+            schema: WikiPage.schemaKindSchema
+        }]
+    };
+
+    static memberMetaSchema: ObjectSchema = {
         kind: "object",
         members: [
             {
-                name: "kind",
-                label: "kind",
-                schema: {
-                    kind: "switch",
-                    kinds: [
-                        { kind: "string" },
-                        { kind: "number" },
-                        { kind: "email" },
-                        { kind: "object" },
-                        { kind: "array" },
-                        { kind: "select", },
-                        { kinds: "switch" }
-                    ]
-                } as SwitchSchema
-            },
-            {
-                name: "label",
-                label: ", label",
+                name: "name",
                 schema: {
                     kind: "string"
                 } as StringSchema
-            }
-        ]
+            },
+            {
+                name: "label",
+                schema: {
+                    kind: "string"
+                } as StringSchema
+            },
+            {
+                name: "schema",
+                schema: WikiPage.schemaMetaSchema
+            }]
+    };
+
+    static initialize() {
+        var kinds = WikiPage.schemaKindSchema.kinds;
+
+        kinds.push(
+            {
+                kind: "string", members: [
+                    { name: "maxLength", schema: { kind: "number" } }]
+            });
+        kinds.push(
+            {
+                kind: "number", members: [
+                    { name: "minValue", schema: { kind: "number" } },
+                    { name: "maxValue", schema: { kind: "number" } }]
+            });
+        kinds.push(
+            { kind: "email", members: [] });
+        kinds.push(
+            {
+                kind: "object", members: [
+                    { name: "members", schema: { kind: "array", itemsSchema: WikiPage.memberMetaSchema } as ArraySchema<any> }
+                ]
+            });
+        kinds.push(
+            { kind: "array", members: [] });
+        kinds.push(
+            { kind: "select", members: [] });
+        kinds.push(
+            { kind: "switch", members: [] });
+        kinds.push(
+            { kind: "array", members: [] });
 
     }
+
+
     edit(this: WikiPage) {
         this.error = "";
         this.editMode = EditMode.Editing;
@@ -159,7 +198,7 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
         var that = this;
         switch (this.table) {
             case "schema":
-                that.schema = WikiPage.metaSchema;
+                that.schema = WikiPage.schemaMetaSchema;
                 break;
             default:
                 //var property = that.property;
@@ -185,6 +224,8 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
         return "VALUE: " + JSON.stringify(this.value);
     }
 }
+
+WikiPage.initialize();
 
 Vue.component("wiki-page", WikiPage);
 

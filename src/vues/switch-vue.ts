@@ -16,8 +16,7 @@ export class SwitchSchema implements Schema<any> {
 // SwitchVuet
 @Component({
     props: ["property", "value", "debug"],
-    template: `<div>
-    <p>This is a switch</p>
+    template: `<div class="switch-vue">
     <div v-if="debug">
         <p>schema:{{property.schema}}</p>
         <p>label:{{property.label}}</p>
@@ -49,7 +48,7 @@ export class SwitchSchema implements Schema<any> {
             get(this: SwitchVue): Property<any, any> {
                 return {
                     path: "",
-                    label: "l1",
+                    label: this.property.label,
                     schema: this.getSchema()
                 };
             }

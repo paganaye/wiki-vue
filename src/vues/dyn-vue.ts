@@ -46,7 +46,7 @@ export class DynVueSchema implements Schema<any> {
         vueType: function (this: any) {
 
             console.log("calculating dyn-vue::vueType");
-            console.log("this.property", JSON.stringify(this.property));
+            //console.log("this.property", JSON.stringify(this.property));
             console.log("this.value", JSON.stringify(this.value));
 
             var property: Property<any, any> = this.property;
