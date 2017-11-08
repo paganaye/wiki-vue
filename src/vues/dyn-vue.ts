@@ -16,20 +16,22 @@ export class DynVueSchema implements Schema<any> {
     <div v-if="debug">
         <p>schema:{{property.schema}}</p>
         <p>label:{{property.label}}</p>
-        <p>value:{{value}}</p>
+        <p>value:{{dynValue}}</p>
         <p>vueType:{{vueType}}</p>
     </div>
     <component :is="vueType" 
-        :property="property" v-model="dynvalue"></component>
+        :property="property" v-model="dynValue"></component>
 </div>`,
 
     beforeUpdate: function (this: any) {
         console.log("dyn-vue", "beforeUpdate", this);
     },
     computed: {
-        dynvalue: {
-            get() { return this.value; },
-            set(val: any) {
+        dynValue: {
+            get: function (this: any) {
+                return this.value;
+            },
+            set: function (this: any, val: any) {
                 this.$emit('input', val)
             }
         },

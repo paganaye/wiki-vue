@@ -20,14 +20,6 @@ export interface TableSchema<TItemType> extends Schema<TItemType[]> {
     },
     template: `<div>
     <table>
-        <thead>
-            <tr>
-                <th>&nbsp;</th>
-                <th>#</th>
-                <th>Description</th>
-                <th>&nbsp;</th>
-            </tr>        
-        </thead>
         <draggable :list="value" id="list" ref="list" 
             :options='{handle:".table-row-handle", onStart:"onStart", onEnd:"onEnd"}'
             element="tbody">        

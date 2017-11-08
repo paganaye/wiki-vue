@@ -21,7 +21,7 @@ export interface SelectSchema extends Schema<string> {
     <v-text-field v-else
         readonly
         :label="property.label || (property.schema && (property.schema.label || property.schema.name)) || '???'"
-        v-model="dynvalue"></v-text-field>
+        v-model="textvalue"></v-text-field>
 </div>`,
     beforeUpdate: function (this: any) {
         console.log("select-vue", "beforeUpdate");
@@ -29,17 +29,20 @@ export interface SelectSchema extends Schema<string> {
     computed: {
         dynvalue: {
             get() {
-                if (typeof this.value === "object" && this.value.text) {
-                    return this.value.text;
-                }
                 return this.value;
             },
             set(val: any) {
-                if (typeof val === "object" && val.text) {
-                    val = val.text;
-                }
                 this.$emit('input', val)
+            },
+        },
+        textvalue: function (this: SelectVue) {
+            var val = this.value;
+            var filtered
+            var rightItems = this.property.schema.items.filter(i => i.value == val);
+            if (rightItems.length > 0) {
+                return  rightItems[0].text || val;
             }
+            return val;            
         },
         items: function (this: SelectVue) {
             console.log("property", this.property, "value", this.value);

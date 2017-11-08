@@ -28,7 +28,7 @@ class WikiPageSchema implements Schema<any> {
 @Component({
     template: `<div>
     <p v-if="loading">Loading {{table}} {{id}}</p>
-    <dyn-vue v-if="!loading" :property="property" v-model="this.value" :debug="debug" />  
+    <dyn-vue v-if="!loading" :property="property" v-model="pageValue" :debug="debug" />  
     <v-btn v-if="!loading && !editing" color="primary" @click="edit">Edit</v-btn>
     <v-btn v-if="editing" color="primary" @click="save">Save</v-btn>
     <v-btn v-if="editing" color="secondary" @click="cancel">Cancel</v-btn>
@@ -37,6 +37,15 @@ class WikiPageSchema implements Schema<any> {
 </div>`,
     props: ["document"],
     computed: {
+        pageValue: {
+            get: function (this: any) {
+                return this.value;
+            },
+            set: function (this: any, val: any) {
+                this.value = val;
+                console.log("page value", val);
+            }
+        },
         table: function (this: any) {
             var pos = this.firstSpacePos;
             return pos < 0 ? this.document : this.document.substring(0, pos);
@@ -156,8 +165,8 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
                             kind: "array", itemsSchema: {
                                 kind: "object",
                                 members: [
-                                    { name: "name", schema: { kind: "string" } },
-                                    { name: "value", schema: { kind: "string" } }]
+                                    { name: "value", schema: { kind: "string" } },
+                                    { name: "text", schema: { kind: "string" } }]
                             }
                         } as ArraySchema<any>
                     }
