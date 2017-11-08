@@ -73,6 +73,9 @@ export interface TableSchema<TItemType> extends Schema<TItemType[]> {
     },
     beforeMount: function (this: any) {
         console.log("table-vue", "beforeMount");
+        if (!this.value || !Array.isArray(this.value)) {
+            this.$emit('input', [])
+        }
     },
     mounted: function (this: any) {
         console.log("table-vue", "mounted");
@@ -112,15 +115,7 @@ export interface TableSchema<TItemType> extends Schema<TItemType[]> {
                 };
             };
         }
-    },
-    mounted: function (this: any) {
-        console.log("this", this);
-        console.log("$refs", this.$refs);
-        var list = this.$refs.list;
-        if (!list) {
-            console.error("Cannot find element list", this)
-        }
-    }
+    }    
 })
 export class TableVue extends WikiVue<any, TableSchema<any>> {
     editedPropertyIndex = 0;
