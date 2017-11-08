@@ -42,11 +42,14 @@ export interface ArraySchema<TItemType> extends Schema<TItemType[]> {
     created: function (this: any) {
         console.log("array-vue", "created", "value", this.value);
     },
-    beforeUpdate: function (this: any) {
-        console.log("array-vue", "beforeUpdate");
-        if (this.value == null) {
+    beforeMount: function (this: any) {
+        console.log("array-vue", "beforeMount");
+        if (!this.value || !Array.isArray(this.value)) {
             this.$emit('input', [])
         }
+    },
+    mounted: function (this: any) {
+        console.log("array-vue", "mounted");
     },
     methods: {
         deleteItem: function (this: any, item: any, index: number) {

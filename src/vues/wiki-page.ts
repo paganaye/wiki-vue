@@ -10,7 +10,7 @@ import { TextFieldVue, StringSchema, NumberSchema } from './text-field-vue';
 import { SelectVue, SelectSchema } from './select-vue';
 import { ObjectVue, ObjectSchema, ObjectMember } from './object-vue';
 import { ArrayVue, ArraySchema } from './array-vue';
-import { TableVue } from './table-vue';
+import { TableVue, TableSchema } from './table-vue';
 import { DynVue } from './dyn-vue';
 import { SwitchVue, SwitchSchema } from './switch-vue';
 import { RomanVue } from './roman-vue';
@@ -87,18 +87,20 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
     table: string;
     id: string;
 
-    static schemaKindSchema: SwitchSchema = {
+    static schemaKindMetaSchema: SwitchSchema = {
         kind: "switch",
         kinds: []
     } as SwitchSchema;
 
-    static schemaMetaSchema: ObjectSchema = {
-        kind: "object",
-        members: [{
-            name: "kind",
-            schema: WikiPage.schemaKindSchema
-        }]
-    };
+    static schemaMetaSchema = WikiPage.schemaKindMetaSchema;
+
+    // static schemaMetaSchema: ObjectSchema = {
+    //      kind: "object",
+    //      members: [{
+    //          name: "kind",
+    //          schema: WikiPage.schemaKindMetaSchema
+    //      }]
+    // };
 
     static memberMetaSchema: ObjectSchema = {
         kind: "object",
@@ -122,7 +124,7 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
     };
 
     static initialize() {
-        var kinds = WikiPage.schemaKindSchema.kinds;
+        var kinds = WikiPage.schemaKindMetaSchema.kinds;
 
         kinds.push(
             {
@@ -137,20 +139,46 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
             });
         kinds.push(
             { kind: "email", members: [] });
+        kinds.push({
+            kind: "object", members: [
+                { name: "members", schema: { kind: "table", itemsSchema: WikiPage.memberMetaSchema } as TableSchema<any> }
+            ]
+        });
+        kinds.push({
+            kind: "array", members: [
+                { name: "itemsSchema", schema: WikiPage.schemaMetaSchema }]
+        });
         kinds.push(
             {
-                kind: "object", members: [
-                    { name: "members", schema: { kind: "array", itemsSchema: WikiPage.memberMetaSchema } as ArraySchema<any> }
+                kind: "select", members: [
+                    {
+                        name: "items", schema: {
+                            kind: "array", itemsSchema: {
+                                kind: "object",
+                                members: [
+                                    { name: "name", schema: { kind: "string" } },
+                                    { name: "value", schema: { kind: "string" } }]
+                            }
+                        } as ArraySchema<any>
+                    }
                 ]
             });
         kinds.push(
-            { kind: "array", members: [] });
-        kinds.push(
-            { kind: "select", members: [] });
-        kinds.push(
-            { kind: "switch", members: [] });
-        kinds.push(
-            { kind: "array", members: [] });
+            {
+                kind: "switch", members: [
+                    {
+                        //    kinds: { kind: string, members: ObjectMember[] }[]
+                        name: "kinds", schema: {
+                            kind: "array", itemsSchema: {
+                                kind: "object",
+                                members: [
+                                    { name: "kind", schema: { kind: "string" } },
+                                    { name: "members", schema: { kind: "table", itemsSchema: WikiPage.memberMetaSchema } as TableSchema<any> }]
+                            }
+                        } as ArraySchema<any>
+                    }
+                ]
+            });
 
     }
 

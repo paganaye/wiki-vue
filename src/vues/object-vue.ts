@@ -29,8 +29,8 @@ export interface ObjectMember {
         console.log("object-vue", "beforeCreate");
     },
 
-    beforeUpdate: function (this: any) {
-        console.log("object-vue", "beforeUpdate", "value", this.value);
+    mounted: function (this: any) {
+        console.log("object-vue", "mounted", "value", this.value);
         if (!this.value) {
             this.$emit('input', {})
         }

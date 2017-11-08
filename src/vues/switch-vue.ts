@@ -10,9 +10,6 @@ export class SwitchSchema implements Schema<any> {
     kinds: { kind: string, members: ObjectMember[] }[]
 }
 
-/**
-
- */
 // SwitchVuet
 @Component({
     props: ["property", "value", "debug"],
@@ -31,8 +28,8 @@ export class SwitchSchema implements Schema<any> {
     <object-vue :property="objectProperty" v-model="objectValue" :debug="debug" />  
 </div>`,
 
-    beforeUpdate: function (this: SwitchVue) {
-        console.log("switch-vue", "beforeUpdate", this);
+    mounted: function (this: SwitchVue) {
+        console.log("switch-vue", "mounted", this);
         if (!this.value || !this.value.kind) {
             this.$emit('input', { kind: "object", members: [] });
         }
@@ -41,11 +38,11 @@ export class SwitchSchema implements Schema<any> {
         switchKind: {
             get(this: SwitchVue) { return this.value && this.value.kind; },
             set(this: SwitchVue, val: any) {
-                this.value.kind = val;
+                this.$set(this.value, "kind", val);
             }
         },
         objectProperty: {
-            get(this: SwitchVue): Property<any, any> {
+            get(this: any): Property<any, any> {
                 return {
                     path: "",
                     label: this.property.label,
@@ -54,14 +51,14 @@ export class SwitchSchema implements Schema<any> {
             }
         },
         objectValue: {
-            get(this: SwitchVue) { return this.value; },
-            set(this: SwitchVue, val: any) {
+            get(this: any) { return this.value; },
+            set(this: any, val: any) {
                 if (!val) val = {};
                 val.kind = this.switchKind;
                 this.value = val;
             }
         },
-        vueType: function (this: SwitchVue) {
+        vueType: function (this: any) {
 
             console.log("calculating switch-vue::vueType");
             console.log("this.property", JSON.stringify(this.property));
@@ -73,21 +70,23 @@ export class SwitchSchema implements Schema<any> {
             return result;
 
         }
+    },
+    methods: {
+        getSchema: function (this: any) {
+            var rightKinds = this.property.schema.kinds.filter(k => k.kind == this.switchKind);
+            if (rightKinds.length > 0) {
+                var schema: ObjectSchema = {
+                    kind: "object",
+                    members: rightKinds[0].members
+                };
+            }
+            return schema;
+        }
     }
+
 })
 export class SwitchVue extends WikiVue<any, SwitchSchema> {
-    switchKind: string;
 
-    getSchema() {
-        var rightKinds = this.property.schema.kinds.filter(k => k.kind == this.switchKind);
-        if (rightKinds.length > 0) {
-            var schema: ObjectSchema = {
-                kind: "object",
-                members: rightKinds[0].members
-            };
-        }
-        return schema;
-    }
 }
 
 Vue.component("switch-vue", SwitchVue);

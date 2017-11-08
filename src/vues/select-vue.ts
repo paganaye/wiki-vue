@@ -6,7 +6,7 @@ import { WikiVue, Property, Schema, vues } from "./wiki-vue";
 
 export interface SelectSchema extends Schema<string> {
     kind: "select";
-    list: any;
+    items: any;
 }
 
 // SelectVue
@@ -43,7 +43,7 @@ export interface SelectSchema extends Schema<string> {
         },
         items: function (this: SelectVue) {
             console.log("property", this.property, "value", this.value);
-            return this.property.schema.list;
+            return this.property.schema.items;
         }
     }
 })
