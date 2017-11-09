@@ -150,7 +150,13 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
             { kind: "email", members: [] });
         kinds.push({
             kind: "object", members: [
-                { name: "members", schema: { kind: "table", itemsSchema: WikiPage.memberMetaSchema } as TableSchema<any> }
+                {
+                    name: "members", schema: {
+                        kind: "table",
+                        itemsSchema: WikiPage.memberMetaSchema,
+                        itemsTemplate: "<p>hi</p>"
+                    } as TableSchema<any>
+                }
             ]
         });
         kinds.push({
@@ -182,7 +188,13 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
                                 kind: "object",
                                 members: [
                                     { name: "kind", schema: { kind: "string" } },
-                                    { name: "members", schema: { kind: "table", itemsSchema: WikiPage.memberMetaSchema } as TableSchema<any> }]
+                                    {
+                                        name: "members", schema: {
+                                            kind: "table",
+                                            itemsSchema: WikiPage.memberMetaSchema,
+                                            itemsTemplate: "<p>hi</p>"
+                                        } as TableSchema<any>
+                                    }]
                             }
                         } as ArraySchema<any>
                     }

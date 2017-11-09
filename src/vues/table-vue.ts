@@ -10,6 +10,7 @@ Vue.component("draggable", draggable.default);
 export interface TableSchema<TItemType> extends Schema<TItemType[]> {
     kind: "table";
     itemsSchema: Schema<TItemType>;
+    itemsTemplate: string;
 }
 
 // TableVue
