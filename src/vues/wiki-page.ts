@@ -135,19 +135,18 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
     static initialize() {
         var kinds = WikiPage.schemaKindMetaSchema.kinds;
 
-        kinds.push(
-            {
-                kind: "string", members: [
-                    { name: "maxLength", schema: { kind: "number" } }]
-            });
-        kinds.push(
-            {
-                kind: "number", members: [
-                    { name: "minValue", schema: { kind: "number" } },
-                    { name: "maxValue", schema: { kind: "number" } }]
-            });
-        kinds.push(
-            { kind: "email", members: [] });
+        kinds.push({
+            kind: "string", members: [
+                { name: "maxLength", schema: { kind: "number" } }]
+        });
+        kinds.push({
+            kind: "number", members: [
+                { name: "minValue", schema: { kind: "number" } },
+                { name: "maxValue", schema: { kind: "number" } }]
+        });
+        kinds.push({
+            kind: "email", members: []
+        });
         kinds.push({
             kind: "object", members: [
                 {
@@ -163,43 +162,41 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
             kind: "array", members: [
                 { name: "itemsSchema", schema: WikiPage.schemaMetaSchema }]
         });
-        kinds.push(
-            {
-                kind: "select", members: [
-                    {
-                        name: "items", schema: {
-                            kind: "array", itemsSchema: {
-                                kind: "object",
-                                members: [
-                                    { name: "value", schema: { kind: "string" } },
-                                    { name: "text", schema: { kind: "string" } }]
-                            }
-                        } as ArraySchema<any>
-                    }
-                ]
-            });
-        kinds.push(
-            {
-                kind: "switch", members: [
-                    {
-                        //    kinds: { kind: string, members: ObjectMember[] }[]
-                        name: "kinds", schema: {
-                            kind: "array", itemsSchema: {
-                                kind: "object",
-                                members: [
-                                    { name: "kind", schema: { kind: "string" } },
-                                    {
-                                        name: "members", schema: {
-                                            kind: "table",
-                                            itemsSchema: WikiPage.memberMetaSchema,
-                                            itemsTemplate: "<p>hi2 {{this.toString()}}</p>"
-                                        } as TableSchema<any>
-                                    }]
-                            }
-                        } as ArraySchema<any>
-                    }
-                ]
-            });
+        kinds.push({
+            kind: "select", members: [
+                {
+                    name: "items", schema: {
+                        kind: "array", itemsSchema: {
+                            kind: "object",
+                            members: [
+                                { name: "value", schema: { kind: "string" } },
+                                { name: "text", schema: { kind: "string" } }]
+                        }
+                    } as ArraySchema<any>
+                }
+            ]
+        });
+        kinds.push({
+            kind: "switch", members: [
+                {
+                    //    kinds: { kind: string, members: ObjectMember[] }[]
+                    name: "kinds", schema: {
+                        kind: "array", itemsSchema: {
+                            kind: "object",
+                            members: [
+                                { name: "kind", schema: { kind: "string" } },
+                                {
+                                    name: "members", schema: {
+                                        kind: "table",
+                                        itemsSchema: WikiPage.memberMetaSchema,
+                                        itemsTemplate: "<p>hi2 {{this.toString()}}</p>"
+                                    } as TableSchema<any>
+                                }]
+                        }
+                    } as ArraySchema<any>
+                }
+            ]
+        });
 
     }
 

@@ -71,22 +71,34 @@ export interface TableSchema<TItemType> extends Schema<TItemType[]> {
         </draggable>
     </table>
     <v-layout row justify-center>    
-        <v-dialog v-model="dialog" persistent max-width="500px">
+        <v-dialog v-model="dialog" scrollable persistent max-width="500px">
             <v-card>
+<!--
                 <v-card-title>
                     <span class="headline">User Profile</span>
                 </v-card-title>
-                <v-card-text>
-                    <p>{{editing}}</p>
-                    <small>*indicates required field</small>
-                    <dyn-vue :property="editedProperty" v-model="editedValue" />
+                <v-divider></v-divider>
+                <v-card-text style="height: 20em;">
                 </v-card-text>
+                <v-divider></v-divider>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn v-if="editing" color="primary" @click.native="okClicked">OK</v-btn>
-                    <v-btn v-if="editing" color="green darken-1" flat="flat" @click.native="dialog = false">Cancel</v-btn>
-                    <v-btn v-if="!editing" color="primary" @click.native="dialog = false">Close</v-btn>
-                    </v-card-actions>
+                </v-card-actions>
+-->
+<v-card-title>Select Country</v-card-title>
+<v-divider></v-divider>
+<v-card-text style="height: 30em;">
+<p>{{editing}}</p>
+<small>*indicates required field</small>
+<dyn-vue :property="editedProperty" v-model="editedValue" />
+</v-card-text>
+<v-divider></v-divider>
+<v-card-actions>
+  <v-btn v-if="editing" color="primary" @click.native="okClicked">OK</v-btn>
+  <v-btn v-if="editing" color="green darken-1" flat="flat" @click.native="dialog = false">Cancel</v-btn>
+  <v-btn v-if="!editing" color="primary" @click.native="dialog = false">Close</v-btn>
+</v-card-actions>
+      
             </v-card>
         </v-dialog>
     </v-layout>                

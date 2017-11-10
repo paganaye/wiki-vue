@@ -21,10 +21,15 @@ export class SwitchSchema implements Schema<any> {
         <p>vueType:{{vueType}}</p>
     </div>
     <v-select v-if="editing && property.schema"
-        :label="property.label || (property.schema && (property.schema.label || property.schema.name)) || '???'"
+        label="type"
         v-model="switchKind" :items="property.schema.kinds"
         item-text="kind"
         item-value="kind"></v-select>
+    <v-text-field v-else
+        readonly
+        label="type"
+        v-model="switchKind"></v-text-field>
+    
     <object-vue :property="objectProperty" v-model="objectValue" :debug="debug" />  
 </div>`,
 
