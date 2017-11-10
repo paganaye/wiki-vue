@@ -2,22 +2,44 @@ import Vue from 'vue';
 eval("vue_1.default=vue_1;");
 import Component from "vue-class-component";
 import { WikiVue, Property, Schema, vues } from "./wiki-vue";
+//import { DynTemplate } from './dyn-template';
 
 declare function require(name: string): any;
 var draggable = require('vuedraggable');
 Vue.component("draggable", draggable.default);
+
+var Loading = {
+    template: `<div>Loading...</div>`
+}
+var dynamic = {
+    functional: true,
+    props: {
+        template: String,
+        data: { type: Object, default: () => ({}) }
+    },
+    render(h: any, context: any) {
+        const template = context.props.template;
+        const dynComponent = {
+            template,
+            data() { return context.props.data }
+        }
+        const component = template ? dynComponent : Loading;
+        return h(component);
+    }
+};
+
 
 export interface TableSchema<TItemType> extends Schema<TItemType[]> {
     kind: "table";
     itemsSchema: Schema<TItemType>;
     itemsTemplate: string;
 }
-
+//console.log(DynTemplate);
 // TableVue
 @Component({
     props: ["property", "value"],
     components: {
-        draggable
+        draggable, dynamic
     },
     template: `<div>
     <table>
@@ -32,7 +54,9 @@ export interface TableSchema<TItemType> extends Schema<TItemType[]> {
                     </v-btn>    
                 </td>            
                 <td>{{index}}</td>
-                <td>{{item}}</td>
+                <td>
+                    <dynamic :template="getTemplate()" :data="item"></dynamic>                
+                    </td>
                 <td>
                     <v-btn fab flat small class="delete-row-btn" @click="editItem(item, index)">
                         <v-icon dark>open_in_new</v-icon>
@@ -77,6 +101,20 @@ export interface TableSchema<TItemType> extends Schema<TItemType[]> {
         if (!this.value || !Array.isArray(this.value)) {
             this.$emit('input', [])
         }
+        console.log("this.dynTemplate:", this.dynTemplate);
+        var dynTemplateString = this.dynTemplate;
+        this.dynTemplateComponent = Vue.component(
+            'dyn-template',
+            Vue.extend({
+                props: ["value", "dynTemplate"],
+                template: dynTemplateString,
+                computed: {
+                    content: function (this: any) {
+                        console.log("ah", this.$parent);
+                        return "ah\nah\n" + this.$parent;
+                    }
+                }
+            }));
     },
     mounted: function (this: any) {
         console.log("table-vue", "mounted");
@@ -91,6 +129,15 @@ export interface TableSchema<TItemType> extends Schema<TItemType[]> {
         addItem: function (this: any, item: any, index: number) {
             this.value.push({});
         },
+        getValue: function (this: any, item: any, index: number) {
+            console.log("table-vue", "getValue")
+            return item;
+        },
+        getTemplate: function (this: any) {
+            console.log("table-vue", "getTemplate")
+            return this.property.schema.itemsTemplate;
+        },
+
         editItem: function (this: TableVue, item: any, index: number) {
             this.editedPropertyIndex = index;
             this.editedValue = JSON.parse(JSON.stringify(this.value[index]));
@@ -116,12 +163,13 @@ export interface TableSchema<TItemType> extends Schema<TItemType[]> {
                 };
             };
         }
-    }    
+    }
 })
 export class TableVue extends WikiVue<any, TableSchema<any>> {
     editedPropertyIndex = 0;
     editedValue: any = {};
     dialog = false;
+    dynTemplateComponent: any = {};
     editedProperty: Property<any, any> = {
         path: "",
         label: "",

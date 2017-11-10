@@ -154,7 +154,7 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
                     name: "members", schema: {
                         kind: "table",
                         itemsSchema: WikiPage.memberMetaSchema,
-                        itemsTemplate: "<p>hi</p>"
+                        itemsTemplate: "<span>{{name}}</span>"
                     } as TableSchema<any>
                 }
             ]
@@ -192,7 +192,7 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
                                         name: "members", schema: {
                                             kind: "table",
                                             itemsSchema: WikiPage.memberMetaSchema,
-                                            itemsTemplate: "<p>hi</p>"
+                                            itemsTemplate: "<p>hi2 {{this.toString()}}</p>"
                                         } as TableSchema<any>
                                     }]
                             }
