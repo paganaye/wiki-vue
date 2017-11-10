@@ -42,6 +42,7 @@ export interface TableSchema<TItemType> extends Schema<TItemType[]> {
         draggable, dynamic
     },
     template: `<div>
+    <label>{{property.label||property.name}}</label>
     <table class="table">
         <draggable :list="value" id="list" ref="list" 
             :options='{handle:".table-row-handle", onStart:"onStart", onEnd:"onEnd"}'
