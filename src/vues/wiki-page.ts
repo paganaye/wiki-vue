@@ -26,7 +26,7 @@ class WikiPageSchema implements Schema<any> {
 
 // WikiVue
 @Component({
-    template: `<div>
+    template: `<div class="flex xs12 sm10 md8 lg6">
     <p v-if="loading">Loading {{table}} {{id}}</p>
     <dyn-vue v-if="!loading" :property="property" v-model="pageValue" :debug="debug" />  
     <v-btn v-if="!loading && !editing" color="primary" @click="edit">Edit</v-btn>

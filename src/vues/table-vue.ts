@@ -42,7 +42,7 @@ export interface TableSchema<TItemType> extends Schema<TItemType[]> {
         draggable, dynamic
     },
     template: `<div>
-    <table>
+    <table class="table">
         <draggable :list="value" id="list" ref="list" 
             :options='{handle:".table-row-handle", onStart:"onStart", onEnd:"onEnd"}'
             element="tbody">        
@@ -127,7 +127,14 @@ export interface TableSchema<TItemType> extends Schema<TItemType[]> {
             this.value.splice(index, 1);
         },
         addItem: function (this: any, item: any, index: number) {
-            this.value.push({});
+            this.editedPropertyIndex = -1;
+            this.editedValue = {};
+            this.editedProperty = {
+                label: this.property.label,
+                path: "",
+                schema: this.property.schema.itemsSchema
+            }
+            this.dialog = true;
         },
         getValue: function (this: any, item: any, index: number) {
             console.log("table-vue", "getValue")
@@ -149,8 +156,12 @@ export interface TableSchema<TItemType> extends Schema<TItemType[]> {
             this.dialog = true;
         },
         okClicked: function (this: TableVue) {
+            if (this.editedPropertyIndex == -1) {
+                // we're adding a new row
+                this.value.push({});
+                this.editedPropertyIndex = this.value.length - 1;
+            }
             Vue.set(this.value, this.editedPropertyIndex, this.editedValue);
-            //this.$emit("input", this.value);
             this.dialog = false;
         }
     },
