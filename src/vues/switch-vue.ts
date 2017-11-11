@@ -21,7 +21,7 @@ export class SwitchSchema implements Schema<any> {
         <p>vueType:{{vueType}}</p>
     </div>
     <v-select v-if="editing && property.schema"
-        label="type"
+        :label="this.property.label"
         v-model="switchKind" :items="property.schema.kinds"
         item-text="kind"
         item-value="kind"></v-select>
@@ -30,7 +30,7 @@ export class SwitchSchema implements Schema<any> {
         label="type"
         v-model="switchKind"></v-text-field>
     
-    <object-vue :property="objectProperty" v-model="objectValue" :debug="debug" />  
+    <object-vue :noLabel="true" :property="objectProperty" v-model="objectValue" :debug="debug" />  
 </div>`,
 
     mounted: function (this: SwitchVue) {
@@ -50,7 +50,7 @@ export class SwitchSchema implements Schema<any> {
             get(this: any): Property<any, any> {
                 return {
                     path: "",
-                    label: this.property.label,
+                    label: "hidden",
                     schema: this.getSchema()
                 };
             }
