@@ -1,5 +1,5 @@
 import Component from "vue-class-component";
-import { WikiVue, Property, Schema, vues, registerWikiVue } from "./wiki-vue";
+import { WikiVue, Property, Schema, vues, registerWikiVue, SchemaKindMembers } from "./wiki-vue";
 
 export interface RomanSchema extends Schema<number> {
     kind: "text";
@@ -49,6 +49,8 @@ export class RomanVue extends WikiVue<number, RomanSchema> {
 
     static readonly htmlVueName = "roman-vue";
     static readonly schemaKind = "roman";
+    static getSchemaMembers(kinds: SchemaKindMembers[]): void {
+    }
 }
 
 registerWikiVue(RomanVue);

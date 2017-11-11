@@ -48,7 +48,9 @@ import { WikiVue, Property, vues, Schema } from "./wiki-vue";
 
             var property: Property<any, any> = this.property;
             var schema = this.getSchema;
-            var result = vues[schema.kind] || "text-field-vue";
+            var wikiVueClass = vues[schema.kind];
+
+            var result = wikiVueClass && wikiVueClass.htmlVueName || "text-field-vue";
             return result;
 
         }

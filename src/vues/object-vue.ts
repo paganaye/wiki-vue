@@ -1,16 +1,5 @@
 import Component from "vue-class-component";
-import { WikiVue, Property, Schema, vues, registerWikiVue } from "./wiki-vue";
-
-export interface ObjectSchema extends Schema<any> {
-    kind: "object";
-    members: ObjectMember[];
-}
-
-export interface ObjectMember {
-    name: string;
-    label?: string;
-    schema: Schema<any>;
-}
+import { WikiVue, Property, Schema, vues, registerWikiVue, ObjectMember, SchemaKindMembers, ObjectSchema, memberMetaSchema } from "./wiki-vue";
 
 // ObjectVue
 @Component({
@@ -56,8 +45,20 @@ export interface ObjectMember {
 export class ObjectVue extends WikiVue<any, ObjectSchema> {
     static readonly htmlVueName = "object-vue";
     static readonly schemaKind = "object";
+    static getSchemaMembers(kinds: SchemaKindMembers[]): void {
+        kinds.push({
+            kind: "object", members: [
+                {
+                    name: "members", schema: {
+                        kind: "table",
+                        itemsSchema: memberMetaSchema,
+                        itemsTemplate: "<span>{{name}}</span>"
+                    } as any
+                }
+            ]
+        });
+    }
 }
-
 registerWikiVue(ObjectVue);
 
 

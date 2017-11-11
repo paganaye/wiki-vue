@@ -1,7 +1,7 @@
 import Vue from 'vue';
 eval("vue_1.default=vue_1;");
 import Component from "vue-class-component";
-import { WikiVue, Property, Schema, vues, registerWikiVue } from "./wiki-vue";
+import { WikiVue, Property, Schema, vues, registerWikiVue, SchemaKindMembers } from "./wiki-vue";
 //import { DynTemplate } from './dyn-template';
 
 declare function require(name: string): any;
@@ -187,6 +187,8 @@ export class TableVue extends WikiVue<any, TableSchema<any>> {
     };
     static readonly htmlVueName = "table-vue";
     static readonly schemaKind = "table";
+    static getSchemaMembers(kinds: SchemaKindMembers[]): void {
+    }
 }
 
 registerWikiVue(TableVue);

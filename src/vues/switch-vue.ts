@@ -2,13 +2,9 @@ import Vue from 'vue';
 eval("vue_1.default=vue_1;");
 Vue;
 import Component from "vue-class-component";
-import { WikiVue, Property, vues, Schema, registerWikiVue } from "./wiki-vue";
-import { ObjectMember, ObjectSchema } from './object-vue';
-
-export class SwitchSchema implements Schema<any> {
-    kind: "switch";
-    kinds: { kind: string, members: ObjectMember[] }[]
-}
+import { WikiVue, Property, vues, Schema, registerWikiVue, SchemaKindMembers, SwitchSchema, ObjectSchema, memberMetaSchema } from "./wiki-vue";
+import { ArraySchema } from './array-vue';
+import { TableSchema } from './table-vue';
 
 // SwitchVuet
 @Component({
@@ -71,7 +67,8 @@ export class SwitchSchema implements Schema<any> {
 
             var property: Property<any, any> = this.property;
             var schema = this.getSchema();
-            var result = vues[schema.kind] || "text-field-vue";
+            var wikiVueClass = vues[schema.kind];
+            var result = wikiVueClass && wikiVueClass.htmlVueName || "text-field-vue";
             return result;
 
         }
@@ -93,6 +90,29 @@ export class SwitchSchema implements Schema<any> {
 export class SwitchVue extends WikiVue<any, SwitchSchema> {
     static readonly htmlVueName = "switch-vue";
     static readonly schemaKind = "switch";
+    static getSchemaMembers(kinds: SchemaKindMembers[]): void {
+        kinds.push({
+            kind: "switch", members: [
+                {
+                    //    kinds: SchemaKindMembers[]
+                    name: "kinds", schema: {
+                        kind: "array", itemsSchema: {
+                            kind: "object",
+                            members: [
+                                { name: "kind", schema: { kind: "string" } },
+                                {
+                                    name: "members", schema: {
+                                        kind: "table",
+                                        itemsSchema: memberMetaSchema,
+                                        itemsTemplate: "<p>hi2 {{this.toString()}}</p>"
+                                    } as TableSchema<any>
+                                }]
+                        }
+                    } as ArraySchema<any>
+                }
+            ]
+        });
+    }
 }
 
 registerWikiVue(SwitchVue);

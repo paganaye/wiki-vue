@@ -1,5 +1,6 @@
 import Component from "vue-class-component";
-import { WikiVue, Property, Schema, vues, registerWikiVue } from "./wiki-vue";
+import { WikiVue, Property, Schema, vues, registerWikiVue, SchemaKindMembers } from "./wiki-vue";
+import { ArraySchema } from "./array-vue";
 
 export interface SelectItem {
     text: string;
@@ -55,6 +56,22 @@ export interface SelectSchema extends Schema<string> {
 export class SelectVue extends WikiVue<string, SelectSchema> {
     static readonly htmlVueName = "select-vue";
     static readonly schemaKind = "select";
+    static getSchemaMembers(kinds: SchemaKindMembers[]): void {
+        kinds.push({
+            kind: "select", members: [
+                {
+                    name: "items", schema: {
+                        kind: "array", itemsSchema: {
+                            kind: "object",
+                            members: [
+                                { name: "value", schema: { kind: "string" } },
+                                { name: "text", schema: { kind: "string" } }]
+                        }
+                    } as ArraySchema<any>
+                }
+            ]
+        });
+    }
 }
 
 registerWikiVue(SelectVue);

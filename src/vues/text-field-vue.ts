@@ -2,16 +2,10 @@
 //eval("vue_1.default=vue_1;");
 
 import Component from "vue-class-component";
-import { WikiVue, Property, Schema, vues, registerWikiVue } from "./wiki-vue";
+import { WikiVue, Property, Schema, vues, registerWikiVue, SchemaKindMembers } from "./wiki-vue";
 
 export interface TextFieldSchema extends Schema<any> {
     kind: "text";
-}
-export interface StringSchema extends Schema<string> {
-    kind: "string";    
-}
-export interface NumberSchema extends Schema<number> {
-    kind: "number";
 }
 
 @Component({
@@ -65,7 +59,21 @@ export interface NumberSchema extends Schema<number> {
 })
 export class TextFieldVue extends WikiVue<any, TextFieldSchema> {
     static readonly htmlVueName = "text-field-vue";
-    static readonly schemaKind = ["string","number"];
+    static readonly schemaKind = ["string", "number"];
+    static getSchemaMembers(kinds: SchemaKindMembers[]): void {
+        kinds.push({
+            kind: "string", members: [
+                { name: "maxLength", schema: { kind: "number" } }]
+        });
+        kinds.push({
+            kind: "number", members: [
+                { name: "minValue", schema: { kind: "number" } },
+                { name: "maxValue", schema: { kind: "number" } }]
+        });
+        kinds.push({
+            kind: "email", members: []
+        });
+    }
 }
 
 registerWikiVue(TextFieldVue);

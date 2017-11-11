@@ -56,14 +56,71 @@ export interface Property<TValue, TSchema extends Schema<TValue>> {
     schema: TSchema;
 }
 
-export var vues: { [key: string]: string } = {};
+export interface ObjectMember {
+    name: string;
+    label?: string;
+    schema: Schema<any>;
+}
+
+export interface SchemaKindMembers {
+    kind: string;
+    members: ObjectMember[]
+}
+
+export class SwitchSchema implements Schema<any> {
+    kind: "switch";
+    kinds: SchemaKindMembers[]
+}
+
+export interface WikiVueClass {
+    readonly htmlVueName: string;
+    readonly schemaKind: string | string[];
+    getSchemaMembers(kinds: SchemaKindMembers[]): void;
+}
+
+export var schemaKindMetaSchema: SwitchSchema = {
+    kind: "switch",
+    kinds: []
+} as SwitchSchema;
+
+export var schemaMetaSchema = schemaKindMetaSchema;
+
+export interface ObjectSchema extends Schema<any> {
+    kind: "object";
+    members: ObjectMember[];
+}
+
+export interface StringSchema extends Schema<string> {
+    kind: "string";
+}
+export interface NumberSchema extends Schema<number> {
+    kind: "number";
+}
+
+export var memberMetaSchema: ObjectSchema = {
+    kind: "object",
+    members: [
+        {
+            name: "name",
+            schema: {
+                kind: "string"
+            } as StringSchema
+        },
+        {
+            name: "label",
+            schema: {
+                kind: "string"
+            } as StringSchema
+        },
+        {
+            name: "schema",
+            schema: schemaMetaSchema
+        }]
+};
 
 console.log(Vue);
 
-interface WikiVueClass {
-    readonly htmlVueName: string;
-    readonly schemaKind: string | string[];
-}
+export var vues: { [key: string]: WikiVueClass } = {};
 
 export function registerWikiVue(wikiVue: WikiVueClass) {
     var vueName = wikiVue.htmlVueName;
@@ -72,6 +129,7 @@ export function registerWikiVue(wikiVue: WikiVueClass) {
     var schemaKinds = wikiVue.schemaKind;
     if (typeof schemaKinds === "string") schemaKinds = [schemaKinds];
     for (var schemaKind of schemaKinds) {
-        vues[schemaKind] = vueName;
+        vues[schemaKind] = wikiVue;
     }
 }
+

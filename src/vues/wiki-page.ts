@@ -4,14 +4,14 @@ eval("vue_1.default=vue_1;");
 import Vuetify from 'vuetify';
 import * as firebase from 'firebase';
 import Component from "vue-class-component";
-import { WikiVue, Property, vues, Schema, EditMode, registerWikiVue } from "./wiki-vue";
-import { TextFieldVue, StringSchema, NumberSchema } from './text-field-vue';
+import { WikiVue, Property, vues, Schema, EditMode, registerWikiVue, SchemaKindMembers, schemaKindMetaSchema, schemaMetaSchema } from "./wiki-vue";
+import { TextFieldVue } from './text-field-vue';
 import { SelectVue, SelectSchema } from './select-vue';
-import { ObjectVue, ObjectSchema, ObjectMember } from './object-vue';
+import { ObjectVue } from './object-vue';
 import { ArrayVue, ArraySchema } from './array-vue';
 import { TableVue, TableSchema } from './table-vue';
 import { DynVue } from './dyn-vue';
-import { SwitchVue, SwitchSchema } from './switch-vue';
+import { SwitchVue } from './switch-vue';
 import { RomanVue } from './roman-vue';
 
 console.log(Vue, TextFieldVue, SelectVue, ObjectVue, ArrayVue,
@@ -94,114 +94,15 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
     id: string;
     dbValue: string;
 
-    static schemaKindMetaSchema: SwitchSchema = {
-        kind: "switch",
-        kinds: []
-    } as SwitchSchema;
-
-    static schemaMetaSchema = WikiPage.schemaKindMetaSchema;
-
-    // static schemaMetaSchema: ObjectSchema = {
-    //      kind: "object",
-    //      members: [{
-    //          name: "kind",
-    //          schema: WikiPage.schemaKindMetaSchema
-    //      }]
-    // };
-
-    static memberMetaSchema: ObjectSchema = {
-        kind: "object",
-        members: [
-            {
-                name: "name",
-                schema: {
-                    kind: "string"
-                } as StringSchema
-            },
-            {
-                name: "label",
-                schema: {
-                    kind: "string"
-                } as StringSchema
-            },
-            {
-                name: "schema",
-                schema: WikiPage.schemaMetaSchema
-            }]
-    };
 
     static initializeOnce() {
+        var kinds = schemaKindMetaSchema.kinds;
 
         for (var v in vues) {
-            console.log(v);
+            var wikiVueClass = vues[v];
+            var members = wikiVueClass.getSchemaMembers(kinds);
         }
-        var kinds = WikiPage.schemaKindMetaSchema.kinds;
-
-        kinds.push({
-            kind: "string", members: [
-                { name: "maxLength", schema: { kind: "number" } }]
-        });
-        kinds.push({
-            kind: "number", members: [
-                { name: "minValue", schema: { kind: "number" } },
-                { name: "maxValue", schema: { kind: "number" } }]
-        });
-        kinds.push({
-            kind: "email", members: []
-        });
-        kinds.push({
-            kind: "object", members: [
-                {
-                    name: "members", schema: {
-                        kind: "table",
-                        itemsSchema: WikiPage.memberMetaSchema,
-                        itemsTemplate: "<span>{{name}}</span>"
-                    } as TableSchema<any>
-                }
-            ]
-        });
-        kinds.push({
-            kind: "array", members: [
-                { name: "itemsSchema", schema: WikiPage.schemaMetaSchema }]
-        });
-        kinds.push({
-            kind: "select", members: [
-                {
-                    name: "items", schema: {
-                        kind: "array", itemsSchema: {
-                            kind: "object",
-                            members: [
-                                { name: "value", schema: { kind: "string" } },
-                                { name: "text", schema: { kind: "string" } }]
-                        }
-                    } as ArraySchema<any>
-                }
-            ]
-        });
-        kinds.push({
-            kind: "switch", members: [
-                {
-                    //    kinds: { kind: string, members: ObjectMember[] }[]
-                    name: "kinds", schema: {
-                        kind: "array", itemsSchema: {
-                            kind: "object",
-                            members: [
-                                { name: "kind", schema: { kind: "string" } },
-                                {
-                                    name: "members", schema: {
-                                        kind: "table",
-                                        itemsSchema: WikiPage.memberMetaSchema,
-                                        itemsTemplate: "<p>hi2 {{this.toString()}}</p>"
-                                    } as TableSchema<any>
-                                }]
-                        }
-                    } as ArraySchema<any>
-                }
-            ]
-        });
-
     }
-
 
     edit(this: WikiPage) {
         this.error = "";
@@ -249,7 +150,7 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
         var that = this;
         switch (this.table) {
             case "schema":
-                that.schema = WikiPage.schemaMetaSchema;
+                that.schema = schemaMetaSchema;
                 break;
             default:
                 //var property = that.property;
@@ -277,6 +178,8 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
 
     static readonly htmlVueName = "wiki-page";
     static readonly schemaKind = "page";
+    static getSchemaMembers(kinds: SchemaKindMembers[]): void {
+    }
 }
 
 registerWikiVue(WikiPage);
