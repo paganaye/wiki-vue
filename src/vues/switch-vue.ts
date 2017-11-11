@@ -30,7 +30,7 @@ export class SwitchSchema implements Schema<any> {
         label="type"
         v-model="switchKind"></v-text-field>
     
-    <object-vue :noLabel="true" :property="objectProperty" v-model="objectValue" :debug="debug" />  
+    <object-vue :hideLabel="true" :property="objectProperty" v-model="objectValue" :debug="debug" />  
 </div>`,
 
     mounted: function (this: SwitchVue) {

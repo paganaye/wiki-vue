@@ -14,9 +14,9 @@ export interface ObjectMember {
 
 // ObjectVue
 @Component({
-    props: ["property", "value", "debug", "noLabel"],
+    props: ["property", "value", "debug", "hideLabel"],
     template: `<div>
-    <p v-if="!noLabel">{{property.label}} nolabel: {{!noLabel}}</p>
+    <p v-if="!hideLabel">{{property.label}}</p>
     <div v-for="member in members()" v-if="property && property.schema && property.schema.members">
         <dyn-vue 
             :property="dynProperty(member, value)" v-model="value[member.name]" />
