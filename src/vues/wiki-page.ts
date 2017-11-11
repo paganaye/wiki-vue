@@ -92,6 +92,7 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
     // computed
     table: string;
     id: string;
+    dbValue: string;
 
     static schemaKindMetaSchema: SwitchSchema = {
         kind: "switch",
@@ -130,6 +131,10 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
     };
 
     static initializeOnce() {
+
+        for (var v in vues) {
+            console.log(v);
+        }
         var kinds = WikiPage.schemaKindMetaSchema.kinds;
 
         kinds.push({
@@ -218,6 +223,8 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
     cancel(this: WikiPage) {
         this.editMode = EditMode.Viewing;
         this.error = "";
+        this.value = JSON.parse(this.dbValue);
+
     }
     loadValueFromDb(this: any) {
         var that = this;
@@ -232,6 +239,7 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
             var val = snapshot.val();
             if (val === null) val = {};
             that.value = val;
+            that.dbValue = JSON.stringify(val);
             console.log("firebase value", JSON.stringify(that.value));
         }, function (errorObject: any) {
             console.log("The read failed: " + errorObject.code);
