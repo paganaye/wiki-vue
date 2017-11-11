@@ -4,6 +4,11 @@ eval("vue_1.default=vue_1;");
 import Component from "vue-class-component";
 import { WikiVue, Property, Schema, vues } from "./wiki-vue";
 
+export interface SelectItem {
+    text: string;
+    value: any;
+}
+
 export interface SelectSchema extends Schema<string> {
     kind: "select";
     items: any;
@@ -38,11 +43,11 @@ export interface SelectSchema extends Schema<string> {
         textvalue: function (this: SelectVue) {
             var val = this.value;
             var filtered
-            var rightItems = this.property.schema.items.filter(i => i.value == val);
+            var rightItems = this.property.schema.items.filter((i: SelectItem) => i.value == val);
             if (rightItems.length > 0) {
-                return  rightItems[0].text || val;
+                return rightItems[0].text || val;
             }
-            return val;            
+            return val;
         },
         items: function (this: SelectVue) {
             console.log("property", this.property, "value", this.value);

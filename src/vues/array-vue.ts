@@ -48,9 +48,6 @@ export interface ArraySchema<TItemType> extends Schema<TItemType[]> {
             this.$emit('input', [])
         }
     },
-    mounted: function (this: any) {
-        console.log("array-vue", "mounted");
-    },
     methods: {
         deleteItem: function (this: any, item: any, index: number) {
             this.value.splice(index, 1);
@@ -70,6 +67,7 @@ export interface ArraySchema<TItemType> extends Schema<TItemType[]> {
         }
     },
     mounted: function (this: any) {
+        console.log("array-vue", "mounted");
         console.log("this", this);
         console.log("$refs", this.$refs);
         var list = this.$refs.list;

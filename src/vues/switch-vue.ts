@@ -78,7 +78,7 @@ export class SwitchSchema implements Schema<any> {
     },
     methods: {
         getSchema: function (this: any) {
-            var rightKinds = this.property.schema.kinds.filter(k => k.kind == this.switchKind);
+            var rightKinds = this.property.schema.kinds.filter((k: Schema<any>) => k.kind == this.switchKind);
             if (rightKinds.length > 0) {
                 var schema: ObjectSchema = {
                     kind: "object",
