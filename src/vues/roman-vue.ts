@@ -1,8 +1,5 @@
-import Vue from 'vue';
-eval("vue_1.default=vue_1;");
-
 import Component from "vue-class-component";
-import { WikiVue, Property, Schema, vues } from "./wiki-vue";
+import { WikiVue, Property, Schema, vues, registerWikiVue } from "./wiki-vue";
 
 export interface RomanSchema extends Schema<number> {
     kind: "text";
@@ -49,8 +46,11 @@ export class RomanVue extends WikiVue<number, RomanSchema> {
             roman = (key[+digits.pop() + (i * 10)] || "") + roman;
         return Array(+digits.join("") + 1).join("M") + roman;
     }
+
+    static readonly htmlVueName = "roman-vue";
+    static readonly schemaKind = "roman";
 }
 
-Vue.component("roman-vue", RomanVue);
-vues.roman = 'roman-vue';
+registerWikiVue(RomanVue);
+
 

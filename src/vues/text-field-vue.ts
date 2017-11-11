@@ -1,8 +1,8 @@
-import Vue from 'vue';
-eval("vue_1.default=vue_1;");
+//import Vue from 'vue';
+//eval("vue_1.default=vue_1;");
 
 import Component from "vue-class-component";
-import { WikiVue, Property, Schema, vues } from "./wiki-vue";
+import { WikiVue, Property, Schema, vues, registerWikiVue } from "./wiki-vue";
 
 export interface TextFieldSchema extends Schema<any> {
     kind: "text";
@@ -64,8 +64,8 @@ export interface NumberSchema extends Schema<number> {
     }
 })
 export class TextFieldVue extends WikiVue<any, TextFieldSchema> {
+    static readonly htmlVueName = "text-field-vue";
+    static readonly schemaKind = ["string","number"];
 }
 
-Vue.component("text-field-vue", TextFieldVue);
-vues.string = 'text-field-vue';
-vues.number = 'text-field-vue';
+registerWikiVue(TextFieldVue);

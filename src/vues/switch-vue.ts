@@ -1,8 +1,8 @@
 import Vue from 'vue';
 eval("vue_1.default=vue_1;");
-
+Vue;
 import Component from "vue-class-component";
-import { WikiVue, Property, vues, Schema } from "./wiki-vue";
+import { WikiVue, Property, vues, Schema, registerWikiVue } from "./wiki-vue";
 import { ObjectMember, ObjectSchema } from './object-vue';
 
 export class SwitchSchema implements Schema<any> {
@@ -91,8 +91,8 @@ export class SwitchSchema implements Schema<any> {
 
 })
 export class SwitchVue extends WikiVue<any, SwitchSchema> {
-
+    static readonly htmlVueName = "switch-vue";
+    static readonly schemaKind = "switch";
 }
 
-Vue.component("switch-vue", SwitchVue);
-vues.switch = 'switch-vue';
+registerWikiVue(SwitchVue);

@@ -1,11 +1,10 @@
 import Vue from 'vue';
 eval("vue_1.default=vue_1;");
 
-
 import Vuetify from 'vuetify';
 import * as firebase from 'firebase';
 import Component from "vue-class-component";
-import { WikiVue, Property, vues, Schema, EditMode } from "./wiki-vue";
+import { WikiVue, Property, vues, Schema, EditMode, registerWikiVue } from "./wiki-vue";
 import { TextFieldVue, StringSchema, NumberSchema } from './text-field-vue';
 import { SelectVue, SelectSchema } from './select-vue';
 import { ObjectVue, ObjectSchema, ObjectMember } from './object-vue';
@@ -15,10 +14,8 @@ import { DynVue } from './dyn-vue';
 import { SwitchVue, SwitchSchema } from './switch-vue';
 import { RomanVue } from './roman-vue';
 
-
-console.log(TextFieldVue, SelectVue, ObjectVue, ArrayVue,
+console.log(Vue, TextFieldVue, SelectVue, ObjectVue, ArrayVue,
     DynVue, vues, RomanVue, TableVue, SwitchVue);
-
 
 class WikiPageSchema implements Schema<any> {
     kind: "page";
@@ -132,7 +129,7 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
             }]
     };
 
-    static initialize() {
+    static initializeOnce() {
         var kinds = WikiPage.schemaKindMetaSchema.kinds;
 
         kinds.push({
@@ -269,9 +266,14 @@ class WikiPage extends WikiVue<any, WikiPageSchema> {
     jsonvalue(): string {
         return "VALUE: " + JSON.stringify(this.value);
     }
+
+    static readonly htmlVueName = "wiki-page";
+    static readonly schemaKind = "page";
 }
 
-WikiPage.initialize();
+registerWikiVue(WikiPage);
 
-Vue.component("wiki-page", WikiPage);
+WikiPage.initializeOnce();
+
+
 

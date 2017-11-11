@@ -1,13 +1,8 @@
 import Vue from 'vue';
+Vue;
 eval("vue_1.default=vue_1;");
-
 import Component from "vue-class-component";
 import { WikiVue, Property, vues, Schema } from "./wiki-vue";
-
-export class DynVueSchema implements Schema<any> {
-    kind: "string";
-    defaultValue?: any;
-}
 
 // DynVue
 @Component({
@@ -59,8 +54,7 @@ export class DynVueSchema implements Schema<any> {
         }
     }
 })
-export class DynVue extends WikiVue<any, DynVueSchema> {
+export class DynVue extends Vue {
 }
-
 
 Vue.component("dyn-vue", DynVue);

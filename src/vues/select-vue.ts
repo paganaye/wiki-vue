@@ -1,8 +1,5 @@
-import Vue from 'vue';
-eval("vue_1.default=vue_1;");
-
 import Component from "vue-class-component";
-import { WikiVue, Property, Schema, vues } from "./wiki-vue";
+import { WikiVue, Property, Schema, vues, registerWikiVue } from "./wiki-vue";
 
 export interface SelectItem {
     text: string;
@@ -56,6 +53,9 @@ export interface SelectSchema extends Schema<string> {
     }
 })
 export class SelectVue extends WikiVue<string, SelectSchema> {
+    static readonly htmlVueName = "select-vue";
+    static readonly schemaKind = "select";
 }
-Vue.component("select-vue", SelectVue);
-vues.select = 'select-vue';
+
+registerWikiVue(SelectVue);
+

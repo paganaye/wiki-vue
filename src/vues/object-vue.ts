@@ -1,8 +1,5 @@
-import Vue from 'vue';
-eval("vue_1.default=vue_1;");
-
 import Component from "vue-class-component";
-import { WikiVue, Property, Schema, vues } from "./wiki-vue";
+import { WikiVue, Property, Schema, vues, registerWikiVue } from "./wiki-vue";
 
 export interface ObjectSchema extends Schema<any> {
     kind: "object";
@@ -57,7 +54,10 @@ export interface ObjectMember {
     }
 })
 export class ObjectVue extends WikiVue<any, ObjectSchema> {
+    static readonly htmlVueName = "object-vue";
+    static readonly schemaKind = "object";
 }
-Vue.component("object-vue", ObjectVue);
-vues.object = 'object-vue';
+
+registerWikiVue(ObjectVue);
+
 

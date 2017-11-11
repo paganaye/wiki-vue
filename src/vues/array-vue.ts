@@ -1,7 +1,7 @@
 import Vue from 'vue';
 eval("vue_1.default=vue_1;");
 import Component from "vue-class-component";
-import { WikiVue, Property, Schema, vues } from "./wiki-vue";
+import { WikiVue, Property, Schema, vues, registerWikiVue } from "./wiki-vue";
 
 
 declare function require(name: string): any;
@@ -76,10 +76,11 @@ export interface ArraySchema<TItemType> extends Schema<TItemType[]> {
         }
     }
 })
-export class ArrayVue extends WikiVue<any, ArraySchema<any>> {
 
+export class ArrayVue extends WikiVue<any, ArraySchema<any>> {
+    static readonly htmlVueName = "array-vue";
+    static readonly schemaKind = "array";
 }
 
-Vue.component("array-vue", ArrayVue);
-vues.array = 'array-vue';
+registerWikiVue(ArrayVue);
 
