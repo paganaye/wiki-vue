@@ -75,7 +75,7 @@ export interface TableSchema<TItemType> extends Schema<TItemType[]> {
             <v-card>
                 <v-card-title>Select Country</v-card-title>
                     <v-divider></v-divider>
-                    <v-card-text style="height: 30em;">
+                    <v-card-text style="height: 30em; overflow-x:hidden">
                         <dyn-vue :property="editedProperty" v-model="editedValue" />
                     </v-card-text>
                     <v-divider></v-divider>
