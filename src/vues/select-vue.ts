@@ -48,8 +48,14 @@ export interface SelectSchema extends Schema<string> {
             return val;
         },
         items: function (this: SelectVue) {
-            console.log("property", this.property, "value", this.value);
-            return this.property.schema.items;
+            var result = [];
+            for (var o of this.property.schema.items) {
+                result.push({
+                    value: o.value,
+                    text: o.text || o.value
+                });
+            }
+            return result;
         }
     }
 })

@@ -56,7 +56,7 @@ import { TableSchema } from './table-vue';
             set(this: any, val: any) {
                 if (!val) val = {};
                 val.kind = this.switchKind;
-                this.value = val;
+                this.$emit('input', val);
             }
         },
         vueType: function (this: any) {

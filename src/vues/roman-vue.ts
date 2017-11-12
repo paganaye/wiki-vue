@@ -10,7 +10,7 @@ export interface RomanSchema extends Schema<number> {
 @Component({
     props: ["property", "value"],
     template: `<div>
-    <label>{{property.label||property.name}}</label>
+    <label v-if="!editing">{{property.label||property.name}}</label>
     <v-text-field
         v-if="editing"
         :label="property.label || (property.schema && (property.schema.label || property.schema.name)) || '???'"
